@@ -1,9 +1,9 @@
-<!-- <div class="container col-md-6 rounded-4">
+<div class="container col-md-6 rounded-4">
     <form [formGroup]="form" (ngSubmit)="validar()" class="container">
-        <h1>Registro</h1>
+        <h1>Registro de usuario</h1>
         <hr />
         <div class="row py-2">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="form-group">
                     <label for="">Correo Electrónico</label>
                     <input type="email" class="form-control" name="email" formControlName="email" [class.red-icon]="this.form.get('email')?.invalid" />
@@ -13,32 +13,27 @@
 
                 </div>
             </div>
-            <div class="col-md-6 ">
-                <div class="form-group">
-                    <label>Legajo</label>
-                    <input type="text" name="legajo" id="legajo" class="form-control" formControlName="legajo" [class.red-icon]="this.form.get('legajo')?.invalid" />
-                </div>
+            <div class="col-md-12">
                 <div class="form-group">
                     <label>Apellido</label>
                     <input type="text" name="apellido" id="apellido" class="form-control" formControlName="apellido" [class.red-icon]="this.form.get('apellido')?.invalid" />
                 </div>
-
             </div>
         </div>
 
         <div class="row py-2">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="form-group">
                     <label for="">Contraseña</label> <span class="eyeIcon" style="padding-left: 5px;" (click)="viewpass()"><i
-                            [ngClass]="visible?'fa-solid fa-eye-slash':'fa-solid fa-eye'" tippy="Ver contraseña"></i></span>
+                            [ngClass]="visible?'eyeIcon fas fa-eye-slash':'eyeIcon fas fa-eye'" tippy="Ver contraseña"></i></span>
                     <input [type]="changeType?'password':'text'" class="form-control" name="contrasenia" formControlName="contrasenia" [class.red-icon]="this.form.get('contrasenia')?.invalid" />
 
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="form-group">
                     <label>Confirmar Contraseña</label> <span class="eyeIcon" style="padding-left: 5px;" (click)="viewpass()"><i
-                            [ngClass]="visible?'fa-solid fa-eye-slash':'fa-solid fa-eye'" tippy="Ver contraseña"></i></span>
+                            [ngClass]="visible?'eyeIcon fas fa-eye-slash':'eyeIcon fas fa-eye'" tippy="Ver contraseña"></i></span>
                     <input [type]="changeType?'password':'text'" class="form-control" name="contraseniaC" formControlName="contraseniaC" [class.red-icon]=" this.form.get('contraseniaC')?.invalid" />
                 </div>
             </div>
@@ -49,14 +44,9 @@
                     cuenta</button>
             </div>
             <div class="d-grid py-2">
-                <button type="button" class="btn btnGris" routerLink="/seguridad/login">Ya tengo
+                <button type="button" class="btn btnGris" routerLink="/">Ya tengo
                     cuenta</button>
             </div>
-        </div>
-        <div class="row">
-            <div class="d-flex mt-2 justify-content-center" tippy="Volver al inicio">
-                <i class="fa-solid fa-arrow-left icono" routerLink="" type="button"></i>
-            </div>
-        </div>
+        </div>       
     </form>
-</div> -->
+</div>

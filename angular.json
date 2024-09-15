@@ -82,6 +82,7 @@
             ],
             "styles": [
               "src/styles.css",
+              "node_modules/ngx-spinner/ngx-spinner.css",
               "node_modules/tippy.js/dist/tippy.css",
               "node_modules/tippy.js/themes/light.css",
               "node_modules/tippy.js/animations/scale.css",

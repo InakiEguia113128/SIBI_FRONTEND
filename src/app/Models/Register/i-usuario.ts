@@ -1,8 +1,6 @@
 export interface Usuario{
     email: string;
-    nombre: string ;
-    apellido: string ;
-    legajo: string ;
+    nombreCompleto: string ;
     contrasenia: string;
 }
 

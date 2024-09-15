@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Usuario } from 'src/app/Models/Register/i-usuario';
+import { UserService } from 'src/app/Services/Users/user.service';
 import Swal from 'sweetalert2';
 
 interface RegI{
@@ -24,7 +25,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    //private servicio: RegistoService,
+    private servicio: UserService,
     private spinner: NgxSpinnerService,
     private router: Router,
     ) {
@@ -37,13 +38,9 @@ export class RegisterComponent implements OnInit {
         '',
         [Validators.required, Validators.pattern('[a-zA-Z ]{2,254}')],
       ],
-      legajo: [
-        '',
-        [Validators.required, Validators.pattern('^([1-9]\\d*)|[0]')], Validators.minLength(5)
-      ],
       email: ['', [Validators.required, Validators.email]],
-      contrasenia: ['', [Validators.required]],
-      contraseniaC: ['', [Validators.required]],
+      contrasenia: ['', [Validators.required, Validators.minLength(5)]],
+      contraseniaC: ['', [Validators.required, Validators.minLength(5)]],
     });
   }
   
@@ -65,32 +62,29 @@ export class RegisterComponent implements OnInit {
   agregar() {
     this.spinner.show();
     const usuario: Usuario = {
-      nombre: this.form.get('nombre')?.value,
-      apellido: this.form.get('apellido')?.value,
-      legajo: this.form.get('legajo')?.value,
+      nombreCompleto: `${this.form.get('nombre')?.value} ${this.form.get('apellido')?.value}`,
       email: this.form.get('email')?.value,
       contrasenia: this.form.get('contrasenia')?.value,
     };
-
-    // this.servicio.PostRegistro(usuario).subscribe((data) => {
-    //   if (data.error) {
-    //     this.spinner.hide();
-    //     Swal.fire({
-    //       icon: 'error',
-    //       title: 'Cuidado...',
-    //       text: data.error,
-    //     });
-    //   } else {
-    //     this.spinner.hide();
-    //     Swal.fire({
-    //       icon: 'success',
-    //       title: 'Perfecto...',
-    //       text: 'Se registró con éxito, espere su activación',
-    //     }).then(() => { 
-    //       this.router.navigateByUrl("/seguridad/login");
-    //     });
-    //   }
-    // });
+    this.servicio.PostRegistro(usuario).subscribe((data) => {
+      if (data.error) {
+        this.spinner.hide();
+        Swal.fire({
+          icon: 'error',
+          title: 'Cuidado...',
+          text: data.error,
+        });
+      } else {
+        this.spinner.hide();
+        Swal.fire({
+          icon: 'success',
+          title: 'Perfecto...',
+          text: 'Se registró su usuario con éxito',
+        }).then(() => { 
+          this.router.navigateByUrl("/");
+        });
+      }
+    });
   }
 
   viewpass(){

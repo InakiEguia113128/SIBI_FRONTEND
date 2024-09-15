@@ -69,7 +69,6 @@ export class SidenavComponent implements OnInit, OnDestroy {
 
   private shouldHideNavbar(url: string): boolean {
     const hiddenRoutes = ['/','/register'];
-    debugger
     if(url == '/register')
     {
       this.loginVisible = false
