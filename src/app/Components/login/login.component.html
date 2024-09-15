@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="row">
+        <div class="col-2 col-xl-4 col-lg-4 col-md-3 col-sm-2"></div>
+        <div class="col-8 col-xl-4 col-lg-4 col-md-6 col-sm-8 rounded-4 shadow">
+            <div class="row">
+                <div class="col-12">
+                    <form [formGroup]="loginForm" (ngSubmit)="login()">
+                        <h1 class="">Bienvenido</h1>
+                        <hr />
+                        <div class="mb-4 form-group">
+                            <label class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" name="email" formControlName="email"
+                                [class.red-icon]="this.loginForm.get('email')?.invalid" />
+                        </div>
+                        <div class="mb-4 form-group">
+                            <label class="form-label">Contraseña</label><span [ngClass]="visible?'eyeIcon fas fa-eye-slash':'eyeIcon fas fa-eye'"
+                                style="padding-left: 5px;" (click)="viewpass()"></span>
+                            <input [type]="changeType?'password':'text'" class="form-control" name="contrasenia"
+                                formControlName="contrasenia"
+                                [class.red-icon]="this.loginForm.get('contrasenia')?.invalid" />
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btnAzul" [disabled]="loginForm.invalid">Iniciar
+                                sesión</button>
+                        </div>
+                        <div class="d-grid py-2">
+                            <button type="button" class="btn btnGris" (click)="registrar()">Registrarse</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 col-xl-4 col-lg-4 col-md-3 col-sm-2"></div>
+    </div>
+</div>
