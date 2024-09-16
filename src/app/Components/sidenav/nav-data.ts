@@ -6,32 +6,32 @@ export const navbarData = [
     },
     {
         routeLink: 'products',
-        icon : 'fal fa-box-open',
-        label: 'Products'
+        icon : 'fal fa-book',
+        label: 'Libros'
     },
     {
         routeLink: 'statistics',
         icon : 'fal fa-chart-bar',
-        label: 'Statistics'
+        label: 'Reportes'
     },
     {
         routeLink: 'coupens',
         icon : 'fal fa-tags',
-        label: 'Coupens'
+        label: 'Descuentos'
     },
     {
         routeLink: 'pages',
-        icon : 'fal fa-file',
-        label: 'Pages'
+        icon : 'fal fa-id-card',
+        label: 'Socio'
     },
     {
         routeLink: 'media',
-        icon : 'fal fa-camera',
-        label: 'Media'
+        icon : 'fal fa-shopping-basket',
+        label: 'Alquileres'
     },
     {
         routeLink: 'settings',
-        icon : 'fal fa-cog',
-        label: 'Settings'
+        icon : 'fal fa-user',
+        label: 'Usuario'
     }
 ];

@@ -22,6 +22,7 @@ export class RegisterComponent implements OnInit {
   form!: FormGroup;
   visible : boolean = true;
   changeType: boolean = true;
+  emailInvalido: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -69,6 +70,7 @@ export class RegisterComponent implements OnInit {
     this.servicio.PostRegistro(usuario).subscribe((data) => {
       if (data.error) {
         this.spinner.hide();
+        this.emailInvalido = true;
         Swal.fire({
           icon: 'error',
           title: 'Cuidado...',
@@ -76,6 +78,7 @@ export class RegisterComponent implements OnInit {
         });
       } else {
         this.spinner.hide();
+        this.emailInvalido = false;
         Swal.fire({
           icon: 'success',
           title: 'Perfecto...',

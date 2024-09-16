@@ -6,7 +6,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="">Correo Electrónico</label>
-                    <input type="email" class="form-control" name="email" formControlName="email" [class.red-icon]="this.form.get('email')?.invalid" />
+                    <input type="email" class="form-control" name="email" formControlName="email" [class.red-icon]="this.form.get('email')?.invalid || this.emailInvalido" />
 
                     <label>Nombre</label>
                     <input type="text" class="form-control" name="nombre" formControlName="nombre" [class.red-icon]="this.form.get('nombre')?.invalid" />
@@ -27,7 +27,9 @@
                     <label for="">Contraseña</label> <span class="eyeIcon" style="padding-left: 5px;" (click)="viewpass()"><i
                             [ngClass]="visible?'eyeIcon fas fa-eye-slash':'eyeIcon fas fa-eye'" tippy="Ver contraseña"></i></span>
                     <input [type]="changeType?'password':'text'" class="form-control" name="contrasenia" formControlName="contrasenia" [class.red-icon]="this.form.get('contrasenia')?.invalid" />
-
+                    <div *ngIf="this.form.get('contrasenia')?.invalid || this.form.get('contrasenia')?.touched" class="invalid-feedback">
+                        La contraseña debe contener 6 caracteres.
+                      </div>
                 </div>
             </div>
             <div class="col-md-12">

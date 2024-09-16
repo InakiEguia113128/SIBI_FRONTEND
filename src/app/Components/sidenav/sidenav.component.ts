@@ -71,11 +71,11 @@ export class SidenavComponent implements OnInit, OnDestroy {
     const hiddenRoutes = ['/','/register'];
     if(url == '/register')
     {
-      this.loginVisible = false
+      this.loginVisible = false;
     }
     else if(url == '/')
     {
-      this.loginVisible = true
+      this.loginVisible = true;
     }
 
     return hiddenRoutes.includes(url);
