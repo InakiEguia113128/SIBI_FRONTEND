@@ -34,8 +34,7 @@
             </div>
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>Confirmar Contraseña</label> <span class="eyeIcon" style="padding-left: 5px;" (click)="viewpass()"><i
-                            [ngClass]="visible?'eyeIcon fas fa-eye-slash':'eyeIcon fas fa-eye'" tippy="Ver contraseña"></i></span>
+                    <label>Confirmar Contraseña</label> 
                     <input [type]="changeType?'password':'text'" class="form-control" name="contraseniaC" formControlName="contraseniaC" [class.red-icon]=" this.form.get('contraseniaC')?.invalid" />
                 </div>
             </div>

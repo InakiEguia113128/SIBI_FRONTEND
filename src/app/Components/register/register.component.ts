@@ -63,7 +63,8 @@ export class RegisterComponent implements OnInit {
   agregar() {
     this.spinner.show();
     const usuario: Usuario = {
-      nombreCompleto: `${this.form.get('nombre')?.value} ${this.form.get('apellido')?.value}`,
+      nombre: this.form.get('nombre')?.value,
+      apellido: this.form.get('apellido')?.value,
       email: this.form.get('email')?.value,
       contrasenia: this.form.get('contrasenia')?.value,
     };
