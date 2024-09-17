@@ -61,7 +61,7 @@ export class SettingsComponent implements OnInit {
         title: 'Cuidado...',
         text: 'Las contraseñas no coinciden',
       });
-      return; // Detenemos la ejecución si las contraseñas no coinciden
+      return;
     }
   
     Swal.fire({
