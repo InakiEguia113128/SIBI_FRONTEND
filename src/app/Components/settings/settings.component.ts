@@ -61,36 +61,48 @@ export class SettingsComponent implements OnInit {
         title: 'Cuidado...',
         text: 'Las contraseñas no coinciden',
       });
+      return; // Detenemos la ejecución si las contraseñas no coinciden
     }
-
-    const usuario: ModicarUsuario = {
-      idUsuario : this.idUsuario,
-      nombre : this.form.get('nombre')?.value,
-      apellido: this.form.get('apellido')?.value,
-      email: this.form.get('email')?.value,
-      contrasenia: this.form.get('contraseniaNuevo')?.value,
-    };
-    
-    this.spinner.show();  
-    this.servicio.PutUsuario(usuario).subscribe((data) => {
-      if (data.error) {
-        this.spinner.hide();
-        Swal.fire({
-          icon: 'error',
-          title: 'Cuidado...',
-          text: data.error,
-        });
-      } else {
-        this.spinner.hide();
-        Swal.fire({
-          icon: 'success',
-          title: 'Perfecto...',
-          text: 'Se actualizo su usuario con éxito',
-        }).then(() => { 
+  
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: '¿Deseas modificar los datos del usuario?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const usuario: ModicarUsuario = {
+          idUsuario : this.idUsuario,
+          nombre : this.form.get('nombre')?.value,
+          apellido: this.form.get('apellido')?.value,
+          email: this.form.get('email')?.value,
+          contrasenia: this.form.get('contraseniaNuevo')?.value,
+        };
+  
+        this.spinner.show();  
+        this.servicio.PutUsuario(usuario).subscribe((data) => {
+          this.spinner.hide();
+          if (data.error) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Cuidado...',
+              text: data.error,
+            });
+          } else {
+            Swal.fire({
+              icon: 'success',
+              title: 'Perfecto...',
+              text: 'Se actualizó su usuario con éxito',
+            }).then(() => { });
+          }
         });
       }
     });
-  }
+  }  
 
   viewpass(){
     this.visible = !this.visible;
