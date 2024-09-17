@@ -1,4 +1,10 @@
 
+.bg-light {
+    background-color: #f8f9fa; /* Color clarito */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
 
 /*Custom*/
 
@@ -114,7 +120,7 @@ h5 {
 }
 
 .pad {
-    margin-top: 150px;
+    margin-top: 50px;
 }
 
 body {

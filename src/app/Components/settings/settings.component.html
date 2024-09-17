@@ -1,4 +1,4 @@
-<div class="container pad">
+<div class="container pad bg-light rounded-3 p-4">
     <form [formGroup]="form" (ngSubmit)="Actualizar()">
         <h1>Modificar datos de usuario</h1>
         <hr>
@@ -6,7 +6,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Nombre</label>
-                    <input type="text"  formControlName="nombre" class="form-control" required>
+                    <input type="text" formControlName="nombre" class="form-control" required>
                 </div>
             </div>
             <div class="col-md-6">
@@ -20,15 +20,17 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="">Nueva contraseña</label> <span class="eyeIcon" style="padding-left: 5px;" (click)="viewpass()"><i
-                        [ngClass]="visible?'eyeIcon fas fa-eye-slash':'eyeIcon fas fa-eye'" tippy="Ver contraseña"></i></span>
-                    <input [type]="changeType?'password':'text'" class="form-control" name="contraseniaActual" formControlName="contraseniaActual" [class.red-icon]="this.form.get('contraseniaActual')?.invalid" />
+                    <label for="">Nueva contraseña</label> 
+                    <span class="eyeIcon" style="padding-left: 5px;" (click)="viewpass()">
+                        <i [ngClass]="visible ? 'eyeIcon fas fa-eye-slash' : 'eyeIcon fas fa-eye'" tippy="Ver contraseña"></i>
+                    </span>
+                    <input [type]="changeType ? 'password' : 'text'" class="form-control" name="contraseniaActual" formControlName="contraseniaActual" [class.red-icon]="this.form.get('contraseniaActual')?.invalid" />
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Confirmar contraseña</label>
-                    <input [type]="changeType?'password':'text'" class="form-control" name="contraseniaNuevo" formControlName="contraseniaNuevo" [class.red-icon]="this.form.get('contraseniaNuevo')?.invalid" />
+                    <input [type]="changeType ? 'password' : 'text'" class="form-control" name="contraseniaNuevo" formControlName="contraseniaNuevo" [class.red-icon]="this.form.get('contraseniaNuevo')?.invalid" />
                 </div>
             </div>
         </div>
