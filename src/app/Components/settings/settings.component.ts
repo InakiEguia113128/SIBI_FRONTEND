@@ -71,6 +71,7 @@ export class SettingsComponent implements OnInit {
       contrasenia: this.form.get('contraseniaNuevo')?.value,
     };
     
+    this.spinner.show();  
     this.servicio.PutUsuario(usuario).subscribe((data) => {
       if (data.error) {
         this.spinner.hide();
