@@ -69,7 +69,6 @@ export class LoginComponent implements OnInit {
 
     this.Subscription.add(
       this.servicio.PostLogin(login).subscribe(next => {
-        debugger
         this.spinner.hide();
         Swal.fire({
           icon: 'success',
@@ -82,7 +81,6 @@ export class LoginComponent implements OnInit {
           this.router.navigate(["/dashboard"]);
         });
       }, error => {
-        debugger
         this.spinner.hide();
         Swal.fire({
           icon: 'error',

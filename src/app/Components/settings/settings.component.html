@@ -1,17 +1,18 @@
-<div class="container pad bg-light rounded-3 p-4">
-    <form [formGroup]="form" (ngSubmit)="Actualizar()">
-        <h1>Modificar datos de usuario</h1>
+<div class="container pad">
+    <!-- <div class="container pad bg-light rounded-3 p-4"></div> -->
+    <form [formGroup]="form" (ngSubmit)="Actualizar()" class="container rounded-4">
+        <h1>Modificar datos de usuario {{rolUsuario}}</h1>
         <hr>
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Nombre</label>
+                    <label>Nombre*</label>
                     <input type="text" formControlName="nombre" class="form-control" required>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Apellido</label>
+                    <label>Apellido*</label>
                     <input type="text" formControlName="apellido" class="form-control" required>
                 </div>
             </div>
@@ -38,7 +39,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Correo Electrónico</label>
+                    <label>Correo Electrónico*</label>
                     <input formControlName="email" class="form-control" [disabled]="isDisabled">
                 </div>
             </div>

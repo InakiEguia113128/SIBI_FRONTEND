@@ -17,6 +17,7 @@ export class SettingsComponent implements OnInit {
   changeType: boolean = true;
   visible : boolean = true;
   isDisabled : boolean = true;
+  rolUsuario : string ='';
 
   constructor(
     private servicio: UserService,
@@ -49,6 +50,7 @@ export class SettingsComponent implements OnInit {
           email: usuario.email,
           apellido: usuario.apellido,
         });
+        this.rolUsuario = usuario.roles[0]
       },
       error: (error) => { console.log(error) }
     })

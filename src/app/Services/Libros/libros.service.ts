@@ -1,0 +1,29 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Libro } from 'src/app/Models/Libros/i-libro';
+import { environment } from 'src/environments/environment';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class LibrosService {
+
+  
+  constructor(private http: HttpClient) { }
+
+  headers = new HttpHeaders({
+    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+    "Content-Type": "application/json"
+  });
+  
+  urlbase = environment.baseApiUrl;
+
+  PostRegistrarLibro(l:Libro) : Observable<any>{
+    return this.http.post(this.urlbase + "Libros/registrar-libro", l, { headers : this.headers });
+  }
+
+  GetGeneros() : Observable<any>{
+    return this.http.get(this.urlbase+"Libros/generos-libro", { headers : this.headers });
+  }
+}
