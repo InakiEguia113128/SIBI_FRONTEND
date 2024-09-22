@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ObtenerCatalogo } from 'src/app/Models/Libros/i-obtener-catalogo';
 import { LibrosService } from 'src/app/Services/Libros/libros.service';
+import { UserService } from 'src/app/Services/Users/user.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -11,12 +12,14 @@ import Swal from 'sweetalert2';
   styleUrls: ['./catalog.component.css']
 })
 export class CatalogComponent {
+  eliminarVisible : boolean = false;
+  ususario: any = {};
   libros: any = [];
   generos: any = [];
-  librosPorPagina: number = 9; // Número de libros por página
+  librosPorPagina: number = 9; 
   paginaActual: number = 1;
-  mostrarFiltros: boolean = false; // Controla la visibilidad del formulario de filtros
-  filtros: any = { // Define los filtros iniciales
+  mostrarFiltros: boolean = false; 
+  filtros: any = {
     titulo: null,
     autos: null,
     editorial: null,
@@ -29,8 +32,10 @@ export class CatalogComponent {
     isbn: null,
   };
 
-  constructor(private fb: FormBuilder, private servicio: LibrosService, private spinner: NgxSpinnerService) {
+  constructor(private fb: FormBuilder, private servicio: LibrosService, private spinner: NgxSpinnerService, private servicioUsuario:UserService) {
     const prefijo = "data:image/jpeg;base64,";
+
+    this.obtenerUsuario();
 
     this.servicio.GetGeneros().subscribe({
       next: (resp) => {
@@ -118,5 +123,49 @@ export class CatalogComponent {
       salta: 0
     };
     this.cargarLibros("data:image/jpeg;base64,");
+    this.mostrarFiltros = false;
   } 
+
+  obtenerUsuario() {
+    this.ususario = this.servicioUsuario.obtenerRolesUsuarioActivo()
+    this.eliminarVisible = this.ususario.roles.some((role: string) => role === 'Empleado')
+  }
+
+  removerDelCatalogo(idLibro: string, titulo: string) {
+    debugger
+    Swal.fire({
+      title: `¿Deseas eliminar del catálogo el libro ${titulo}?`,
+      text: 'El libro no sera visible',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      this.spinner.show();
+      this.servicio.EliminarLibroCatalogo(idLibro).subscribe({
+        next: (resp) => {
+          this.cargarLibros("data:image/jpeg;base64,");
+          
+          this.spinner.hide();
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Perfecto...',
+            text: 'Se elimino el libro con éxito',
+          }).then(() => { });
+        },
+        error: (error) =>{
+          this.spinner.hide();
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Cuidado...',
+            text: error.error.error,
+          });
+        }
+      });
+    });
+  }
 }

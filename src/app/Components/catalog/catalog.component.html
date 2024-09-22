@@ -20,6 +20,7 @@
             <p class="card-text">{{ libro.descripcion }}</p>
             <p class="card-text"><small class="text-muted">Ubicación: {{ libro.codUbicacion }}</small></p>
           </div>
+          <button *ngIf="eliminarVisible" (click)="removerDelCatalogo(libro.idLibro,libro.titulo)" class="btn btnRojo">Eliminar del catálogo</button>
         </div>
       </div>
     </div>

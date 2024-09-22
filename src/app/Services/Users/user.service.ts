@@ -54,4 +54,17 @@ export class UserService {
   PutUsuario(u:ModicarUsuario) : Observable<any>{
     return this.http.put(this.urlbase+"Usuarios/modificar-usuario", u, { headers: this.headers })
   }
+
+  desloguearUsuario() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    this.decodedToken = null;
+  }
+
+  obtenerRolesUsuarioActivo(): any {
+    let json = localStorage.getItem('usuario');
+    let usuario = json != null ? JSON.parse(json) : null;
+
+    return usuario;
+  }
 }

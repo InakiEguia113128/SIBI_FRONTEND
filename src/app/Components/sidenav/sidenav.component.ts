@@ -2,6 +2,8 @@ import { Component, EventEmitter, HostListener, OnInit, OnDestroy, Output } from
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { navbarData } from './nav-data';
+import { UserService } from 'src/app/Services/Users/user.service';
+import Swal from 'sweetalert2';
 
 interface SideNavToggle {
   screenWidth: number;
@@ -22,7 +24,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
   loginVisible = true;
   private routerSubscription: Subscription | undefined;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private servicio: UserService) {}
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -79,5 +81,25 @@ export class SidenavComponent implements OnInit, OnDestroy {
     }
 
     return hiddenRoutes.includes(url);
+  }
+
+  cerrarSesion(c:boolean){
+    if(c){
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¿Deseas cerrar la seción?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.servicio.desloguearUsuario();
+          this.router.navigateByUrl("");         
+        }
+      });
+    }
   }
 }

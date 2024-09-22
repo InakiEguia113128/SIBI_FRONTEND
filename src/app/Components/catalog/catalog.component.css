@@ -50,6 +50,12 @@ label {
     color: #27423D;
 }
 
+.btnRojo {
+    border-color: #27423D;
+    background: #6d221d;
+    color: #FAF8F2;
+}
+
 .btnVerde {
     background: #27423D;
     color: #FAF8F2;

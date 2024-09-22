@@ -8,12 +8,19 @@
     </div>
     <ul class="sidenav-nav">
         <li class="sidenav-nav-item" *ngFor="let data of navData">
-            <a class="sidenav-nav-link" [routerLink]="[data.routeLink]"
+            <a *ngIf="data.routeLink != ''" class="sidenav-nav-link" [routerLink]="[data.routeLink]"
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{exact: true}"
             >
-                <i class="sidenav-link-icon" [class]="data.icon"></i>
-                <span class="sidenav-link-text" *ngIf="collapsed">{{data.label}}</span>
+                <i class="sidenav-link-icon" (click)="cerrarSesion(data.logout)" [class]="data.icon"></i>
+                <span class="sidenav-link-text" (click)="cerrarSesion(data.logout)" *ngIf="collapsed">{{data.label}}</span>
+            </a>
+            <a *ngIf="data.routeLink == ''" class="sidenav-nav-link"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"
+            >
+                <i class="sidenav-link-icon" (click)="cerrarSesion(data.logout)" [class]="data.icon"></i>
+                <span class="sidenav-link-text" (click)="cerrarSesion(data.logout)" *ngIf="collapsed">{{data.label}}</span>
             </a>
         </li>
     </ul>

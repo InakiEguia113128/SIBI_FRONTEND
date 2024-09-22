@@ -2,41 +2,55 @@ export const navbarData = [
     {
         routeLink: 'dashboard',
         icon : 'fal fa-home',
-        label: 'Dashboard'
+        label: 'Dashboard',
+        logout: false
     },
     {
         routeLink: 'products',
         icon : 'fal fa-book',
-        label: 'Libros'
+        label: 'Libros',
+        logout: false
     },
     {
         routeLink: 'catalog',
         icon : 'fal fa-th',
-        label: 'Catálogo'
+        label: 'Catálogo',
+        logout: false
     },
     {
         routeLink: 'statistics',
         icon : 'fal fa-chart-bar',
-        label: 'Reportes'
+        label: 'Reportes',
+        logout: false
     },
     {
         routeLink: 'coupens',
         icon : 'fal fa-tags',
-        label: 'Descuentos'
+        label: 'Descuentos',
+        logout: false
     },
     {
         routeLink: 'pages',
         icon : 'fal fa-id-card',
-        label: 'Socio'
+        label: 'Socio',
+        logout: false
     },
     {
         routeLink: 'media',
         icon : 'fal fa-shopping-basket',
-        label: 'Alquileres'
+        label: 'Alquileres',
+        logout: false
     },
     {
         routeLink: 'settings',
         icon : 'fal fa-user',
-        label: 'Usuario'
+        label: 'Usuario',
+        logout: false
+    },
+    {
+        routeLink: '',
+        icon : 'fal fa-sign-out',
+        label: 'Cerrar sesión',
+        logout: true
     }
 ];
