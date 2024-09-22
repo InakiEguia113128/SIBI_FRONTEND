@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Libro } from 'src/app/Models/Libros/i-libro';
+import { ObtenerCatalogo } from 'src/app/Models/Libros/i-obtener-catalogo';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -25,5 +26,9 @@ export class LibrosService {
 
   GetGeneros() : Observable<any>{
     return this.http.get(this.urlbase+"Libros/generos-libro", { headers : this.headers });
+  }
+
+  GetCatalogo(f:ObtenerCatalogo) : Observable<any>{
+    return this.http.post(this.urlbase+"Libros/obtener-catalogo", f, { headers : this.headers });
   }
 }

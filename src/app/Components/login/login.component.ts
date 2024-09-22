@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit {
           icon: 'success',
           title: `Bienvenido`,
           confirmButtonColor: '#2c5672',
-          text: 'Inicio de sesión...',
+          text: 'Inicio de sesión correcto',
           timer: 5000
         }).then(x => {
           this.onLogin.emit({visible : true});

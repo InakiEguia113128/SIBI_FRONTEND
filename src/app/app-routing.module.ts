@@ -9,6 +9,7 @@ import { MediaComponent } from './Components/media/media.component';
 import { SettingsComponent } from './Components/settings/settings.component';
 import { LoginComponent } from './Components/login/login.component';
 import { RegisterComponent } from './Components/register/register.component';
+import { CatalogComponent } from './Components/catalog/catalog.component';
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: 'pages', component: PagesComponent },
   { path: 'media', component: MediaComponent },
   { path: 'settings', component: SettingsComponent },
-  { path: 'register', component: RegisterComponent }
+  { path: 'register', component: RegisterComponent },
+  { path: 'catalog', component: CatalogComponent }
 ];
 
 @NgModule({

@@ -10,6 +10,11 @@ export const navbarData = [
         label: 'Libros'
     },
     {
+        routeLink: 'catalog',
+        icon : 'fal fa-th',
+        label: 'Catálogo'
+    },
+    {
         routeLink: 'statistics',
         icon : 'fal fa-chart-bar',
         label: 'Reportes'

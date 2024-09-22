@@ -14,11 +14,12 @@ import { MediaComponent } from './Components/media/media.component';
 import { SettingsComponent } from './Components/settings/settings.component';
 import { LoginComponent } from './Components/login/login.component';
 import { RegisterComponent } from './Components/register/register.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { UserService } from './Services/Users/user.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CatalogComponent } from './Components/catalog/catalog.component'
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
     MediaComponent,
     SettingsComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    CatalogComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +44,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
     HttpClientModule,
     NgxSpinnerModule.forRoot({ type: 'ball-scale-multiple' }),
     BrowserAnimationsModule,
-    NgxSpinnerModule.forRoot({ type: 'ball-scale-multiple' })
+    NgxSpinnerModule.forRoot({ type: 'ball-scale-multiple' }),
+    FormsModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent],

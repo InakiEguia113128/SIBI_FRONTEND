@@ -38,12 +38,12 @@ export class ProductsComponent implements OnInit {
       codigoIsbn: ['', [Validators.required, this.validarISBN]],
       titulo: ['', [Validators.required]],
       cantidadEjemplares: [0, [Validators.required, Validators.min(1)]],
-      descripcion: ['', [Validators.required]],
+      descripcion: ['', [Validators.required, Validators.maxLength(200)]],
       nombreAutor: ['', [Validators.required]],
       editorial: ['', [Validators.required]],
       fechaPublicacion: ['', [Validators.required]],
-      nroEdicion: [null],
-      nroVolumen: [null],
+      nroEdicion: [null, [Validators.minLength(1)]],
+      nroVolumen: [null,[Validators.minLength(1)]],
       codUbicacion: ['', [Validators.required]],
       idGenero: ['', [Validators.required]],
       otroGenero : [''],
@@ -112,7 +112,7 @@ export class ProductsComponent implements OnInit {
           Swal.fire({
             icon: 'success',
             title: 'Perfecto...',
-            text: 'Se actualizó su libro con éxito',
+            text: 'Se registró su libro con éxito',
           }).then(() => { });
 
           this.resetForm();
