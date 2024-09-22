@@ -31,4 +31,8 @@ export class LibrosService {
   GetCatalogo(f:ObtenerCatalogo) : Observable<any>{
     return this.http.post(this.urlbase+"Libros/obtener-catalogo", f, { headers : this.headers });
   }
+
+  EliminarLibroCatalogo(id:string) : Observable<any>{
+    return this.http.delete(this.urlbase+`Libros/eliminar-libro/${id}`, { headers : this.headers });
+  }
 }

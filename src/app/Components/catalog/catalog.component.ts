@@ -132,7 +132,6 @@ export class CatalogComponent {
   }
 
   removerDelCatalogo(idLibro: string, titulo: string) {
-    debugger
     Swal.fire({
       title: `¿Deseas eliminar del catálogo el libro ${titulo}?`,
       text: 'El libro no sera visible',
@@ -147,7 +146,7 @@ export class CatalogComponent {
       this.servicio.EliminarLibroCatalogo(idLibro).subscribe({
         next: (resp) => {
           this.cargarLibros("data:image/jpeg;base64,");
-          
+
           this.spinner.hide();
 
           Swal.fire({
