@@ -134,7 +134,7 @@ export class CatalogComponent {
   removerDelCatalogo(idLibro: string, titulo: string) {
     Swal.fire({
       title: `¿Deseas eliminar del catálogo el libro ${titulo}?`,
-      text: 'El libro no sera visible',
+      text: 'El libro no será visible',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
