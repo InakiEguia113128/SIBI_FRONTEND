@@ -42,8 +42,10 @@ export class SettingsComponent implements OnInit {
 
 
   getUser(id: string) {
+    this.spinner.show();
     this.servicio.GetUsuarioById(id).subscribe({
       next: (data) => {   
+        this.spinner.hide();
         let usuario = data.resultado;
         this.form.patchValue({
           nombre: usuario.nombre,
@@ -52,7 +54,14 @@ export class SettingsComponent implements OnInit {
         });
         this.rolUsuario = usuario.roles[0]
       },
-      error: (error) => { console.log(error) }
+      error: (error) => { 
+        this.spinner.hide(); 
+        Swal.fire({
+          icon: 'error',
+          title: 'Cuidado...',
+          text: error.error.error,
+        });
+      }
     })
   }
 

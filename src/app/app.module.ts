@@ -19,7 +19,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { UserService } from './Services/Users/user.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CatalogComponent } from './Components/catalog/catalog.component'
+import { CatalogComponent } from './Components/catalog/catalog.component';
+import { EditProductComponent } from './Components/edit-product/edit-product.component'
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { CatalogComponent } from './Components/catalog/catalog.component'
     SettingsComponent,
     LoginComponent,
     RegisterComponent,
-    CatalogComponent
+    CatalogComponent,
+    EditProductComponent
   ],
   imports: [
     BrowserModule,

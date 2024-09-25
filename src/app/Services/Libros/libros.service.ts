@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Libro } from 'src/app/Models/Libros/i-libro';
+import { Libro, LibroModificar } from 'src/app/Models/Libros/i-libro';
 import { ObtenerCatalogo } from 'src/app/Models/Libros/i-obtener-catalogo';
 import { environment } from 'src/environments/environment';
 
@@ -34,5 +34,13 @@ export class LibrosService {
 
   EliminarLibroCatalogo(id:string) : Observable<any>{
     return this.http.delete(this.urlbase+`Libros/eliminar-libro/${id}`, { headers : this.headers });
+  }
+
+  ObtenerLibro(id:string) : Observable<any>{
+    return this.http.get(this.urlbase+`Libros/obtener-libro/${id}`, { headers : this.headers });
+  }
+
+  ModificarLibro(id:string, l:LibroModificar) : Observable<any>{
+    return this.http.put(this.urlbase+`Libros/actualizar-libro/${id}`, l,{ headers : this.headers });
   }
 }

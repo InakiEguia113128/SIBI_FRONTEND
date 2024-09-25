@@ -1,4 +1,4 @@
-<div class="container pad">
+<div *ngIf="!editarProductos" class="container pad">
     <h1>Catálogo de libros</h1>
     <hr />
     <div class="row py-2 justify-content-center">
@@ -20,6 +20,8 @@
             <p class="card-text">{{ libro.descripcion }}</p>
             <p class="card-text"><small class="text-muted">Ubicación: {{ libro.codUbicacion }}</small></p>
           </div>
+          <button *ngIf="eliminarVisible" (click)="editarProducto(libro.idLibro)" class="btn btnAmarillo">Modificar datos</button>
+          <br>
           <button *ngIf="eliminarVisible" (click)="removerDelCatalogo(libro.idLibro,libro.titulo)" class="btn btnRojo">Eliminar del catálogo</button>
         </div>
       </div>
@@ -133,3 +135,135 @@
         </div>
       </div>
   </div>  
+
+  <div *ngIf="editarProductos" class="container pad">
+    <form [formGroup]="form" (ngSubmit)="editarLibro()" class="container rounded-4">
+      <h1>Modificar Libro</h1>
+      <hr />
+      <div class="row py-2">
+        <div class="col-md-6 col-12 mb-3">
+          <div class="form-group">
+            <label for="codigoIsbn">Código ISBN*</label>
+            <input type="text" formControlName="codigoIsbn" class="form-control" required />
+            <small *ngIf="form.get('codigoIsbn')?.invalid && form.get('codigoIsbn')?.touched">El código ISBN es inválido (debe ser ISBN-10 o ISBN-13)</small>
+          </div>
+        </div>
+  
+        <div class="col-md-6 col-12 mb-3">
+          <div class="form-group">
+            <label for="titulo">Título*</label>
+            <input type="text" formControlName="titulo" class="form-control" required />
+            <small *ngIf="form.get('titulo')?.invalid && form.get('titulo')?.touched">El título es requerido</small>
+          </div>
+        </div>
+  
+        <div class="col-md-6 col-12 mb-3">
+          <div class="form-group">
+            <label for="cantidadEjemplares">Cantidad de Ejemplares*</label>
+            <input type="number" formControlName="cantidadEjemplares" class="form-control" required />
+            <small *ngIf="form.get('cantidadEjemplares')?.invalid && form.get('cantidadEjemplares')?.touched">La cantidad de ejemplares es requerida</small>
+          </div>
+        </div>
+  
+        <div class="col-md-6 col-12 mb-3">
+          <div class="form-group">
+            <label for="nombreAutor">Nombre del Autor*</label>
+            <input type="text" formControlName="nombreAutor" class="form-control" required />
+            <small *ngIf="form.get('nombreAutor')?.invalid && form.get('nombreAutor')?.touched">El nombre del autor es requerido</small>
+          </div>
+        </div>
+  
+        <div class="col-md-6 col-12 mb-3">
+          <div class="form-group">
+            <label for="idGenero">Género*</label>
+            <select formControlName="idGenero" class="form-control" (change)="onGeneroChange($event)" required>
+              <option *ngFor="let genero of generos" [value]="genero.idGenero">{{ genero.descripcion }}</option>
+            </select>
+            <small *ngIf="form.get('idGenero')?.invalid && form.get('idGenero')?.touched">El género es requerido</small>
+          </div>
+        </div>
+  
+        <div class="col-md-6 col-12 mb-3" *ngIf="form.get('idGenero')?.value === '579b1226-f092-4fb2-9eb2-4747aeace3c8'">
+          <div class="form-group">
+            <label for="otroGenero">Otro Género</label>
+            <input type="text" formControlName="otroGenero" class="form-control" required />
+            <small *ngIf="form.get('otroGenero')?.invalid && form.get('otroGenero')?.touched">Por favor, ingresa otro género</small>
+          </div>
+        </div>
+  
+        <div class="col-md-6 col-12 mb-3">
+          <div class="form-group">
+            <label for="fechaPublicacion">Fecha de Publicación*</label>
+            <input type="date" formControlName="fechaPublicacion" class="form-control" required />
+            <small *ngIf="form.get('fechaPublicacion')?.invalid && form.get('fechaPublicacion')?.touched">La fecha de publicación es requerida</small>
+          </div>
+        </div>
+  
+        <div class="col-md-6 col-12 mb-3">
+          <div class="form-group">
+            <label for="nroEdicion">Número de Edición</label>
+            <input type="number" formControlName="nroEdicion" class="form-control" />
+          </div>
+        </div>
+  
+        <div class="col-md-6 col-12 mb-3">
+          <div class="form-group">
+            <label for="nroVolumen">Número de Volumen</label>
+            <input type="number" formControlName="nroVolumen" class="form-control" />
+          </div>
+        </div>
+  
+        <div class="col-md-6 col-12 mb-3">
+          <div class="form-group">
+            <label for="codUbicacion">Código de Ubicación*</label>
+            <input type="text" formControlName="codUbicacion" class="form-control" required />
+            <small *ngIf="form.get('codUbicacion')?.invalid && form.get('codUbicacion')?.touched">El código de ubicación es requerido</small>
+          </div>
+        </div>
+  
+        <div class="col-md-6 col-12 mb-3">
+          <div class="form-group">
+            <label for="precioAlquiler">Precio de Alquiler por día*</label>
+            <input type="number" formControlName="precioAlquiler" class="form-control" required />
+            <small *ngIf="form.get('precioAlquiler')?.invalid && form.get('precioAlquiler')?.touched">El precio de alquiler es requerido</small>
+          </div>
+        </div>
+  
+        <div class="col-md-6 col-12 mb-3">
+          <div class="form-group">
+            <label for="editorial">Editorial*</label>
+            <input type="text" formControlName="editorial" class="form-control" required />
+            <small *ngIf="form.get('editorial')?.invalid && form.get('editorial')?.touched">La editorial es requerida</small>
+          </div>
+        </div>
+  
+        <div class="col-12 mb-3">
+          <div class="form-group">
+            <label for="descripcion">Descripción*</label>
+            <textarea formControlName="descripcion" class="form-control" rows="4" required></textarea>
+            <small *ngIf="form.get('descripcion')?.invalid && form.get('descripcion')?.touched">
+              La descripción es requerida, máximo 200 caracteres 
+            </small>
+          </div>
+        </div>
+  
+        <div class="col-12 mb-3">
+          <div class="form-group">
+            <label for="imagenPortadaBase64">Imagen de Portada*</label>
+            <input type="file" (change)="onImageChange($event)" class="form-control" accept="image/*" required #fileInput/>
+            <small *ngIf="form.get('imagenPortadaBase64')?.invalid && form.get('imagenPortadaBase64')?.touched">
+              La imagen de portada es requerida
+            </small>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row py-1 justify-content-center">
+        <button class="btn btnRojo" (click)="cancelarEdicion()" >Cancelar</button>
+      </div>
+      <div class="row py-1 justify-content-center">
+        <button class="btn btnVerde" type="submit" [disabled]="form.invalid">Actualizar</button>
+      </div>
+    </form>
+  </div>
+  

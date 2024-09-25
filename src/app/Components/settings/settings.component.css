@@ -50,6 +50,15 @@ label {
     color: #27423D;
 }
 
+.btnGris {
+    background: #423b27;
+    color: #FAF8F2;
+    border-color: #FAF8F2;
+    overflow: hidden;
+    transition: all 500ms ease;
+    z-index: 0;
+}
+
 .btnVerde {
     background: #27423D;
     color: #FAF8F2;
