@@ -1,1 +1,101 @@
-<p>pages works!</p>
+<div class="container pad formulario-superior">
+    <form [formGroup]="form" (ngSubmit)="crearSocio()" class="container rounded-4">
+        <h1>Información de Socio</h1>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="fechaNacimiento">Fecha de Nacimiento*</label>
+                    <input type="date" formControlName="fechaNacimiento" class="form-control" required>
+                    <small *ngIf="form.get('fechaNacimiento')?.invalid && form.get('fechaNacimiento')?.touched">
+                        La fecha de nacimiento es requerida.
+                    </small>
+                </div>
+            </div>
+            <br>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="numeroTelefono">Número de Teléfono*</label>
+                    <input type="text" formControlName="numeroTelefono" class="form-control" required pattern="^[0-9]*$">
+                    <small *ngIf="form.get('numeroTelefono')?.errors?.['required'] && form.get('numeroTelefono')?.touched">
+                        El número de teléfono es requerido.
+                    </small>
+                    <small *ngIf="form.get('numeroTelefono')?.errors?.['minlength'] && form.get('numeroTelefono')?.touched">
+                        El número de teléfono debe tener al menos 10 dígitos.
+                    </small>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="calle">Calle*</label>
+                    <input type="text" formControlName="calle" class="form-control" required>
+                    <small *ngIf="form.get('calle')?.invalid && form.get('calle')?.touched">
+                        La calle es requerida.
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="altura">Altura*</label>
+                    <input type="number" formControlName="altura" class="form-control" required>
+                    <small *ngIf="form.get('altura')?.invalid && form.get('altura')?.touched">
+                        La altura es requerida.
+                    </small>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="idSexo">Sexo*</label>
+                    <select formControlName="idSexo" class="form-control" required>
+                        <option value="">Seleccione su sexo...</option>
+                        <option *ngFor="let sexo of tiposSexo" [value]="sexo.idTipoSexo">{{sexo.descripcion}}</option>
+                    </select>
+                    <small *ngIf="form.get('idSexo')?.invalid && form.get('idSexo')?.touched">
+                        El sexo es requerido.
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="idTipoDocumento">Tipo de Documento*</label>
+                    <select formControlName="idTipoDocumento" class="form-control" required>
+                        <option value="">Seleccione el tipo de documento...</option>
+                        <option *ngFor="let documento of tiposDocumento" [value]="documento.idTipoDocumento">{{documento.descripcion}}</option>
+                    </select>
+                    <small *ngIf="form.get('idTipoDocumento')?.invalid && form.get('idTipoDocumento')?.touched">
+                        El tipo de documento es requerido.
+                    </small>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="nroDocumento">Número de Documento*</label>
+                    <input type="text" formControlName="nroDocumento" class="form-control" required pattern="^[0-9]*$">
+                    <small *ngIf="form.get('nroDocumento')?.errors?.['required'] && form.get('nroDocumento')?.touched">
+                        El número de documento es requerido.
+                    </small>
+                    <small *ngIf="form.get('nroDocumento')?.errors?.['minlength'] && form.get('nroDocumento')?.touched">
+                        El número de teléfono debe tener 8 digitos.
+                    </small>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-center">
+                <button type="submit" [disabled]="form.invalid" class="btn btnVerde">Registrar</button>
+            </div>
+        </div>
+    </form>
+</div>

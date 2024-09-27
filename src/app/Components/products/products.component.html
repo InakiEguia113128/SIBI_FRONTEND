@@ -39,6 +39,7 @@
         <div class="form-group">
           <label for="idGenero">Género*</label>
           <select formControlName="idGenero" class="form-control" (change)="onGeneroChange($event)" required>
+            <option value="">Seleccione el género...</option>
             <option *ngFor="let genero of generos" [value]="genero.idGenero">{{ genero.descripcion }}</option>
           </select>
           <small *ngIf="form.get('idGenero')?.invalid && form.get('idGenero')?.touched">El género es requerido</small>

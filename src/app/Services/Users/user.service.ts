@@ -36,7 +36,6 @@ export class UserService {
     return this.http.post(this.urlbase+"Usuarios/iniciar-secion", u)
       .pipe(
         map((response: any) => {
-          debugger
           const user = response;
           if (user) {
             localStorage.setItem('token', user.resultado.token);
