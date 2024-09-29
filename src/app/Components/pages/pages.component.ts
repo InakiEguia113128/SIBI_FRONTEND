@@ -53,7 +53,6 @@ export class PagesComponent implements OnInit {
       socioData.nroDocumento = Number(socioData.nroDocumento);
       
       let idUsuario = this.servicioUsuario.getUserIdFromLocalStorage();
-      console.log(JSON.stringify(socioData));
       this.servicioSocio.registrarSocio(socioData, idUsuario).subscribe({
         next: () => {
           this.form.patchValue({activo: true});
