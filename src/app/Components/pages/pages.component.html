@@ -1,6 +1,9 @@
 <div class="container pad formulario-superior">
     <form [formGroup]="form" (ngSubmit)="crearSocio()" class="container rounded-4">
         <h1>Información de Socio</h1>
+        <br>
+        <h5 *ngIf="esSocioActivo && puntosDisponibles != null && puntosDisponibles != 0 && puntosDisponibles != 1">Tienes <b> {{puntosDisponibles}} </b> puntos disponibles para canjear por descuentos!!!</h5>
+        <h5 *ngIf="esSocioActivo && puntosDisponibles == 1">Tienes <b> {{puntosDisponibles}} </b> punto disponible para canjear por descuentos!!!</h5>
         <hr>
         <div class="row">
             <div class="col-md-6">
@@ -90,12 +93,41 @@
                     </small>
                 </div>
             </div>
+            <div class="col-md-6 d-flex justify-content-center" *ngIf="esSocioRegistrado">
+                <div *ngIf="esSocioRegistrado" class="form-group mb-4 text-center">
+                  <label for="activo" class="d-block">Estado</label>
+                  <div class="d-flex justify-content-center">
+                    <div class="form-check form-check-inline">
+                      <input type="radio" formControlName="activo" [value]="true" class="form-check-input custom-radio">
+                      <label class="form-check-label">Activo</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input type="radio" formControlName="activo" [value]="false" class="form-check-input custom-radio">
+                      <label class="form-check-label">Inactivo</label>
+                    </div>
+                  </div>
+                </div>
+              </div>              
         </div>
         <br>
-        <div class="row">
+        <div *ngIf="esSocioRegistrado == false" class="row">
             <div class="col-md-12 d-flex justify-content-center">
-                <button type="submit" [disabled]="form.invalid" class="btn btnVerde">Registrar</button>
-            </div>
+                <button type="button" [disabled]="form.invalid" (click)="crearSocio()" class="btn btnAzulado">Registrarme como socio</button>
+            </div>   
+            <br>   
+        </div>
+        
+        <div *ngIf="esSocioRegistrado != false" class="row">
+            <div class="col-md-6 d-flex justify-content-center">
+                <button type="button" [disabled]="form.invalid" (click)="modificarSocio()" class="btn btnAzulado">Modificar datos</button>
+            </div>   
+            <br>   
+            <div class="col-md-6 d-flex justify-content-center" *ngIf="esSocioActivo">
+                <button type="button" [disabled]="form.invalid" (click)="desactivarSocio()" class="btn btnRojo">Desactivar socio</button>
+            </div>  
+            <div class="col-md-6 d-flex justify-content-center" *ngIf="!esSocioActivo">
+                <button type="button" [disabled]="form.invalid" (click)="activarSocio()" class="btn btnVerde">Activar socio</button>
+            </div>  
         </div>
     </form>
 </div>

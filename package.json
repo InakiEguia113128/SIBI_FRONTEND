@@ -24,6 +24,7 @@
     "@ng-select/ng-select": "^13.0.0",
     "@ngneat/helipopper": "^5.1.4",
     "ngx-spinner": "^v14.0.0",
+    "ngx-toastr": "^15.2.2",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.6.13",
     "tippy.js": "^6.3.7",

@@ -74,6 +74,37 @@ label {
     border-color: #FAF8F2;
 }
 
+
+.btnRojo{
+    background: #83210f;
+    color: #FAF8F2;
+    border-color: #FAF8F2;
+    overflow: hidden;
+    transition: all 500ms ease;
+    z-index: 0;
+}
+
+.btnRojo:hover {
+    background: #643a3a;
+    color: #FAF8F2;
+    border-color: #FAF8F2;
+}
+
+.btnAzulado{
+    background: #0f5583;
+    color: #FAF8F2;
+    border-color: #FAF8F2;
+    overflow: hidden;
+    transition: all 500ms ease;
+    z-index: 0;
+}
+
+.btnAzulado:hover {
+    background: #3a4c64;
+    color: #FAF8F2;
+    border-color: #FAF8F2;
+}
+
 .centrado {
     height: 96vh;
     display: flex;
@@ -81,6 +112,10 @@ label {
     justify-content: center;
     padding: 10px;
 }
+
+.toast {
+    z-index: 9999 !important;
+  }
 
 
 /*General*/
@@ -103,6 +138,10 @@ th {
 }
 
 h1 {
+    text-align: center;
+}
+
+h5 {
     text-align: center;
 }
 
@@ -346,3 +385,35 @@ button{
     border: none;
     background: none;
 }
+
+
+/* Estilo para agrandar los radio buttons y hacerlos redondeados */
+.custom-radio {
+    width: 24px;          /* Aumenta el tamaño del radio button */
+    height: 24px;         /* Aumenta el tamaño del radio button */
+    border-radius: 50%;   /* Hace que el radio button sea completamente redondeado */
+    margin-right: 5px;    /* Espacio a la derecha del radio button */
+  }
+  
+  /* Elimina el borde predeterminado y el color de fondo */
+  .custom-radio:focus {
+    outline: none;        /* Quita el borde de enfoque */
+  }
+  
+  /* Estilo para las etiquetas de los radio buttons */
+  .form-check-label {
+    font-size: 1.2rem;    /* Aumenta el tamaño de la etiqueta de texto */
+  }
+  
+  /* Alineación centrada y espaciado */
+  .form-group.text-center {
+    display: flex;
+    flex-direction: column;  /* Asegura que los elementos estén en columna */
+    align-items: center;      /* Centra los elementos horizontalmente */
+  }
+  
+  .form-check-inline {
+    margin: 0 10px; /* Espaciado horizontal entre los radio buttons */
+  }
+  
+  

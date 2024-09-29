@@ -22,6 +22,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
   navData = navbarData;
   navVisible = false;
   loginVisible = true;
+  usuario : any = {};
   private routerSubscription: Subscription | undefined;
 
   constructor(private router: Router, private servicio: UserService) {}
@@ -73,11 +74,19 @@ export class SidenavComponent implements OnInit, OnDestroy {
     const hiddenRoutes = ['/','/register'];
     if(url == '/register')
     {
+      this.navData = navbarData
       this.loginVisible = false;
     }
     else if(url == '/')
     {
+      this.navData = navbarData
       this.loginVisible = true;
+    }
+    else
+    {
+      this.usuario = this.servicio.obtenerRolesUsuarioActivo();
+      const rolesUsuario = this.usuario.roles;
+      this.navData = this.navData.filter(item => item.roles.some(role => rolesUsuario.includes(role)));
     }
 
     return hiddenRoutes.includes(url);
@@ -87,7 +96,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
     if(c){
       Swal.fire({
         title: '¿Estás seguro?',
-        text: '¿Deseas cerrar la seción?',
+        text: '¿Deseas cerrar la sesión?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

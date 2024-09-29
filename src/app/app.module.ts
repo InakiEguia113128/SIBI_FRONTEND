@@ -17,10 +17,13 @@ import { RegisterComponent } from './Components/register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { UserService } from './Services/Users/user.service';
-import { NgxSpinnerModule } from 'ngx-spinner';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CatalogComponent } from './Components/catalog/catalog.component';
 import { EditProductComponent } from './Components/edit-product/edit-product.component'
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { LibrosService } from './Services/Libros/libros.service';
+import { SociosService } from './Services/Socios/socios.service';
 
 @NgModule({
   declarations: [
@@ -45,11 +48,16 @@ import { EditProductComponent } from './Components/edit-product/edit-product.com
     ReactiveFormsModule,
     HttpClientModule,
     NgxSpinnerModule.forRoot({ type: 'ball-scale-multiple' }),
-    BrowserAnimationsModule,
     NgxSpinnerModule.forRoot({ type: 'ball-scale-multiple' }),
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true, 
+    })
   ],
-  providers: [UserService],
+  providers: [UserService, ToastrService, LibrosService, SociosService, NgxSpinnerService],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

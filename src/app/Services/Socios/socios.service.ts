@@ -21,11 +21,27 @@ export class SociosService {
     return this.http.post(`${this.urlbase}Socios/registrar-socio/${idUsuario}`, data, { headers : this.headers});
   }
 
+  modificarSocio(data: any, idUsuario:any): Observable<any> {
+    return this.http.put(`${this.urlbase}Socios/modificar-socio/${idUsuario}`, data, { headers : this.headers});
+  }
+
   tiposSexo(): Observable<any> {
     return this.http.get(`${this.urlbase}Socios/tipos-sexo`, { headers : this.headers});
   }
 
   tiposDocumento(): Observable<any> {
     return this.http.get(`${this.urlbase}Socios/tipos-documento`, { headers : this.headers});
+  }
+
+  obtenerSocio(idUsuario:string): Observable<any> {
+    return this.http.get(`${this.urlbase}Socios/obtener-socio/${idUsuario}`, { headers : this.headers});
+  }
+
+  activarSocio(idUsuario:string): Observable<any> {
+    return this.http.put(`${this.urlbase}Socios/reactivar-socio/${idUsuario}`, null, { headers : this.headers});
+  }
+
+  desactivarSocio(idUsuario:string): Observable<any> {
+    return this.http.put(`${this.urlbase}Socios/desactivar-socio/${idUsuario}`, null, { headers : this.headers});
   }
 }
