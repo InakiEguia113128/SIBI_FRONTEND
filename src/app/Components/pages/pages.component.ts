@@ -114,7 +114,9 @@ export class PagesComponent implements OnInit {
         this.spinner.hide();
       },
       error: (error) => {
-        this.toastr.success('Accederas a descuentos exclusivos', '¡Regístrate como socio!');
+        this.toastr.success('Accederas a descuentos exclusivos', '¡Regístrate como socio!',{
+          timeOut: 7000
+        });
         this.esSocioRegistrado = false;
         this.spinner.hide();
       }

@@ -101,6 +101,10 @@ export class CatalogComponent implements OnInit {
   }
 
   cambiarPagina(pagina: number) {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
     this.paginaActual = pagina;
     this.cargarLibros("data:image/jpeg;base64,");
   }
@@ -154,7 +158,7 @@ export class CatalogComponent implements OnInit {
 
   obtenerUsuario() {
     this.ususario = this.servicioUsuario.obtenerRolesUsuarioActivo()
-    this.eliminarVisible = this.ususario.roles.some((role: string) => role === 'Empleado')
+    this.eliminarVisible = this.ususario.roles.some((role: string) => role === 'Empleado' || role === 'Administrador')
   }
 
   editarProducto(id:any){

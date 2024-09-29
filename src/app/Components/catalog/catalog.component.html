@@ -17,7 +17,7 @@
             <p class="card-text" *ngIf="libro.nroEdicion != null"><strong>Número de Edición:</strong> {{ libro.nroEdicion }}</p>
             <p class="card-text" *ngIf="libro.nroVolumen!= null"><strong>Número de Volumen:</strong> {{ libro.nroVolumen }}</p>
             <p class="card-text"><strong>Género:</strong> {{ getGeneroDescripcion(libro) }}</p>
-            <p class="card-text"><strong>Precio (alquiler por día):</strong>ARS {{ libro.precioAlquiler}}</p>
+            <p class="card-text"><strong>Precio (alquiler por día): </strong>ARS {{ libro.precioAlquiler}}</p>
             <p class="card-text"><strong>ISBN:</strong> {{ libro.codigoIsbn.trim() }}</p>
             <p class="card-text">{{ libro.descripcion }}</p>
             <p class="card-text"><small class="text-muted">Ubicación: {{ libro.codUbicacion }}</small></p>

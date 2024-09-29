@@ -25,7 +25,7 @@ export const navbarData = [
         icon : 'fal fa-chart-bar',
         label: 'Reportes',
         logout: false,
-        roles: ["Empleado","Socio","Administrador","Socio registrado"]
+        roles: ["Empleado","Administrador"]
     },
     {
         routeLink: 'coupens',
