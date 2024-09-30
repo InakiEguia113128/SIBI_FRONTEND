@@ -124,9 +124,6 @@ export class PagesComponent implements OnInit {
   }
 
   desactivarSocio(){
-    this.toastr.success('¡Éxito!', 'Notificación centrada', {
-      positionClass: 'toast-top-center'
-    });
     Swal.fire({
       title: '¿Deseas desactivar su asociación?',
       text: 'Perderá beneficios para proximos alquileres',

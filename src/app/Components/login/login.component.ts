@@ -53,6 +53,10 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 
   ngOnDestroy(): void {

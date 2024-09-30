@@ -46,6 +46,10 @@ export class RegisterComponent implements OnInit {
   }
   
   ngOnInit(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 
   validar() {

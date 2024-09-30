@@ -112,7 +112,7 @@
         <br>
         <div *ngIf="esSocioRegistrado == false" class="row">
             <div class="col-md-12 d-flex justify-content-center">
-                <button type="button" [disabled]="form.invalid" (click)="crearSocio()" class="btn btnAzulado">Registrarme como socio</button>
+                <button type="button" [disabled]="form.invalid" (click)="crearSocio()" class="btn btnAzulado">Registrarme como asociado</button>
             </div>   
             <br>   
         </div>
@@ -123,10 +123,10 @@
             </div>   
             <br>   
             <div class="col-md-6 d-flex justify-content-center" *ngIf="esSocioActivo">
-                <button type="button" [disabled]="form.invalid" (click)="desactivarSocio()" class="btn btnRojo">Desactivar socio</button>
+                <button type="button" [disabled]="form.invalid" (click)="desactivarSocio()" class="btn btnRojo">Desactivar asociación </button>
             </div>  
             <div class="col-md-6 d-flex justify-content-center" *ngIf="!esSocioActivo">
-                <button type="button" [disabled]="form.invalid" (click)="activarSocio()" class="btn btnVerde">Activar socio</button>
+                <button type="button" [disabled]="form.invalid" (click)="activarSocio()" class="btn btnVerde">Activar asociación </button>
             </div>  
         </div>
     </form>

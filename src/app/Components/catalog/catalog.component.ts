@@ -276,7 +276,6 @@ export class CatalogComponent implements OnInit {
     const controls = this.form.controls;
     Object.keys(controls).forEach(key => {
       const control = controls[key];
-      console.log(`${key} - Valid: ${control.valid}, Invalid: ${control.invalid}, Errors: ${JSON.stringify(control.errors)}`);
     });
     
     if (this.form.valid) {
@@ -338,6 +337,7 @@ export class CatalogComponent implements OnInit {
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
+      if(result.isConfirmed){
       this.spinner.show();
       this.servicio.EliminarLibroCatalogo(idLibro).subscribe({
         next: (resp) => {
@@ -361,6 +361,7 @@ export class CatalogComponent implements OnInit {
           });
         }
       });
-    });
+    }
+  });   
   }
 }
