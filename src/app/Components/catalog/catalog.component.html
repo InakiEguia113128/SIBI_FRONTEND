@@ -21,6 +21,7 @@
             <p class="card-text"><strong>ISBN:</strong> {{ libro.codigoIsbn.trim() }}</p>
             <p class="card-text">{{ libro.descripcion }}</p>
             <p class="card-text"><small class="text-muted">Ubicación: {{ libro.codUbicacion }}</small></p>
+            <p class="card-text"><b><small class="text-muted">Cantidad de ejemplares disponibles: {{ libro.cantidadEjemplares }}</small></b></p>
           </div>
           <button *ngIf="eliminarVisible" (click)="editarProducto(libro.idLibro)" class="btn btnAmarillo">Modificar datos</button>
           <br>
