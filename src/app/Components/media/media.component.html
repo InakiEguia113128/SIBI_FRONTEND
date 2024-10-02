@@ -1,1 +1,92 @@
-<p>media works!</p>
+<div class="container rounded-4 pad">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <h1>Alquiler de libros</h1>
+                <hr />
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <form [formGroup]="formularioAltaPedido">
+                        <div class="row">
+                            <div class="col-5 col-sm-5 col-md-5 col-lg-5">
+                                <div class="form-group">
+                                    <label class="form-label">Fecha desde*</label>
+                                    <input type="date" class="form-control bordeNone" formControlName="fechaDesde" />
+                                </div>
+                            </div>
+                            <div class="col-5 col-sm-5 col-md-5 col-lg-5">
+                                <div class="form-group">
+                                    <label class="form-label">Fecha hasta*</label>
+                                    <input type="date" class="form-control bordeNone" formControlName="fechaHasta" />
+                                </div>
+                            </div>
+                        </div>            
+                        <div class="row">
+                            <div class="col-10 col-sm-10 col-md-10 col-lg-10">
+                                <div *ngIf="formularioAltaPedido.errors?.['fechasInvalidas'] && formularioAltaPedido.get('fechaDesde')?.touched && formularioAltaPedido.get('fechaHasta')?.touched" class="alert alert-danger mt-2">
+                                    La fecha "desde" no puede ser mayor a la fecha "hasta".
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-5 col-sm-5 col-md-5 col-lg-5">
+                                <div class="form-group">
+                                    <label for="isbnLibro">Código ISBN*</label>
+                                    <input type="text" formControlName="isbnLibro" class="form-control" required />
+                                    <small *ngIf="formularioAltaPedido.get('isbnLibro')?.invalid && formularioAltaPedido.get('isbnLibro')?.touched">El código ISBN es inválido (debe ser ISBN-10 o ISBN-13)</small>
+                                </div>
+                            </div>
+                            <div class="col-5 col-sm-5 col-md-5 col-lg-5">
+                                <div class="form-group">
+                                    <label for="isbnLibro">Puntos a canjear</label>
+                                    <input type="number" formControlName="puntosCanjeados" class="form-control" required />                     
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-5 col-sm-5 col-md-5 col-lg-5">
+                                <button [disabled]="formularioAltaPedido.get('isbnLibro')?.invalid || formularioAltaPedido.get('isbnLibro')?.disabled" class="btn btnVerde" type="button" (click)="agregarDetalle()">Agregar libro</button>
+                            </div>
+                        </div>
+                        
+                        <div class="row align-items-center py-2">
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6 mt-2">
+                                <strong>Total: {{ total | currency }}</strong>
+                            </div>
+
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6 mt-2">
+                                <button class="btn btnConfirmar" type="button" (click)="crearAlquiler()">Confirmar alquiler</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 py-1 mt-2 table-container table-responsive">
+                    <table class="table table-hover table-sm caption-top">
+                        <thead>
+                            <tr>
+                                <th scope="col">Libro</th>
+                                <th scope="col">Precio alquiler diario</th>
+                                <th scope="col">Subtotal</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let detalle of this.detalleAlquiler">
+                                <td>{{ detalle.titulo }}</td>
+                                <td>{{ detalle.precioAlquiler | currency:'$':'symbol':'1.2-2' }}</td>
+                                <td>{{ calcularSubtotal(detalle) | currency:'$':'symbol':'1.2-2' }}</td>
+                                <td>
+                                    <a><i class="fa fa-trash" type="button"
+                                            (click)="removerDetallePedido(detalle)"
+                                            tippy="Eliminar detalle"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

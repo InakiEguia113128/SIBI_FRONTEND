@@ -40,6 +40,10 @@ export class LibrosService {
     return this.http.get(this.urlbase+`Libros/obtener-libro/${id}`, { headers : this.headers });
   }
 
+  ObtenerLibroISBN(isbn:string) : Observable<any>{
+    return this.http.get(this.urlbase+`Libros/obtener-libro-isbn/${isbn}`, { headers : this.headers });
+  }
+
   ModificarLibro(id:string, l:LibroModificar) : Observable<any>{
     return this.http.put(this.urlbase+`Libros/actualizar-libro/${id}`, l,{ headers : this.headers });
   }

@@ -46,7 +46,7 @@ export const navbarData = [
         icon : 'fal fa-shopping-basket',
         label: 'Alquileres',
         logout: false,
-        roles: ["Empleado","Socio","Administrador","Socio registrado"]
+        roles: ["Socio","Socio registrado"]
     },
     {
         routeLink: 'settings',
