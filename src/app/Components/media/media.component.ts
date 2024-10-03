@@ -22,6 +22,8 @@ export class MediaComponent implements OnInit {
   public usuario : any = {};
   public socio : any = {};
   total: number = 0;
+  alquilerCreado: boolean = false; 
+  paymentUrl: string | null = null;
 
   constructor(
     public fb: FormBuilder,
@@ -121,17 +123,19 @@ export class MediaComponent implements OnInit {
   removerDetallePedido(detalle: any): void {
     const index = this.detalleAlquiler.indexOf(detalle);
 
-    this.detalleAlquiler.splice(index, 1);
-    
-    this.actualizarTotal();
-    
-    this.toastr.warning(detalle.titulo, 'Removiste un libro :"(', {
-        timeOut: 3000
-    });
+    if(this.alquilerCreado == false){
+      this.detalleAlquiler.splice(index, 1);
+      
+      this.actualizarTotal();
+      
+      this.toastr.warning(detalle.titulo, 'Removiste un libro :"(', {
+          timeOut: 3000
+      });
 
-    if (this.detalleAlquiler.length === 0) {
-      this.formularioAltaPedido.get('fechaDesde')?.enable();
-      this.formularioAltaPedido.get('fechaHasta')?.enable();
+      if (this.detalleAlquiler.length === 0) {
+        this.formularioAltaPedido.get('fechaDesde')?.enable();
+        this.formularioAltaPedido.get('fechaHasta')?.enable();
+      }
     }
   }
 
@@ -229,50 +233,62 @@ export class MediaComponent implements OnInit {
 
 crearAlquiler(): void {
   this.spinner.show();
-
+  
   if (this.detalleAlquiler.length === 0) {
-      this.spinner.hide();
-      Swal.fire('CUIDADO', 'Debes agregar al menos un libro al alquiler.', 'warning');
-      return;
+    this.spinner.hide();
+    Swal.fire('CUIDADO', 'Debes agregar al menos un libro al alquiler.', 'warning');
+    return;
   }
 
   const fechaDesde = this.formularioAltaPedido.get('fechaDesde')?.value;
   const fechaHasta = this.formularioAltaPedido.get('fechaHasta')?.value;
 
   if (!fechaDesde || !fechaHasta) {
-      this.spinner.hide();
-      Swal.fire('Error', 'Las fechas de inicio y fin son obligatorias.', 'error');
-      return;
+    this.spinner.hide();
+    Swal.fire('Error', 'Las fechas de inicio y fin son obligatorias.', 'error');
+    return;
   }
-
-
   const alquilerData = {
-      idSocio: this.socio.id || this.servicioUsuario.getUserIdFromLocalStorage(),
-      fechaDesde: fechaDesde,
-      fechaHasta: fechaHasta,
-      montoTotal: this.total,
-      puntosCanjeados: this.formularioAltaPedido.get('puntosCanjeados')?.value || 0,
-      detalleAlquiler: this.detalleAlquiler.map((detalle: { idLibro: any; precioAlquiler: any; }) => ({
-          idLibro: detalle.idLibro,
-          precioAlquiler: detalle.precioAlquiler
-      }))
+    idSocio: this.socio.id || this.servicioUsuario.getUserIdFromLocalStorage(),
+    fechaDesde: fechaDesde,
+    fechaHasta: fechaHasta,
+    montoTotal: this.total,
+    puntosCanjeados: this.formularioAltaPedido.get('puntosCanjeados')?.value || 0,
+    detalleAlquiler: this.detalleAlquiler.map((detalle: { idLibro: any; precioAlquiler: any; subtotal:any }) => ({
+      idLibro: detalle.idLibro,
+      precioAlquiler: detalle.precioAlquiler,
+      subtotalDetalle: detalle.subtotal
+    }))
   };
 
-  this.servicioAlquileres.PostRegistrarAlquiler(alquilerData).subscribe({
-      next: (resp) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Perfecto...',
-          text: 'Se registro su alquiler con éxito',
-        }).then(() => { 
-          this.detalleAlquiler = [];
-          this.formularioAltaPedido.reset();
-        });
-      },
-      error: (error) => {
-          this.spinner.hide();
-          Swal.fire('Error', error.error.error, 'error');
-      }
+  //Lógica de Mercado Pago y alquiler
+  this.servicioAlquileres.PostCrearPreferencia(alquilerData).subscribe({
+    next: (respuesta) => {
+            this.paymentUrl = respuesta.resultado.init_point;
+            this.servicioAlquileres.PostRegistrarAlquiler(alquilerData).subscribe({
+              next: (resp) => {
+                this.spinner.hide();
+                console.log(this.paymentUrl);
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Perfecto...',
+                  text: 'Se registró su alquiler con éxito, Ahora puedes completar el pago.',
+                }).then(() => {
+                  const isbnControl = this.formularioAltaPedido.get('isbnLibro');
+                  isbnControl?.disable(); 
+                  this.alquilerCreado = true;
+                });
+              },
+              error: (error) => {
+                this.spinner.hide();
+                Swal.fire('Error', error.error.error, 'error');
+              }
+            });
+          },
+    error: (error) => {
+      this.spinner.hide();
+      Swal.fire('Error', 'Hubo un problema al crear la preferencia.', 'error');
+    }
   });
   }
 }

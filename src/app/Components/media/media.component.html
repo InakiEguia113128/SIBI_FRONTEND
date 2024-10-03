@@ -10,13 +10,13 @@
                             <div class="col-5 col-sm-5 col-md-5 col-lg-5">
                                 <div class="form-group">
                                     <label class="form-label">Fecha desde*</label>
-                                    <input type="date" class="form-control bordeNone" formControlName="fechaDesde" />
+                                    <input type="date" class="form-control bordeNone" formControlName="fechaDesde" [disabled]="alquilerCreado" />
                                 </div>
                             </div>
                             <div class="col-5 col-sm-5 col-md-5 col-lg-5">
                                 <div class="form-group">
                                     <label class="form-label">Fecha hasta*</label>
-                                    <input type="date" class="form-control bordeNone" formControlName="fechaHasta" />
+                                    <input type="date" class="form-control bordeNone" formControlName="fechaHasta" [disabled]="alquilerCreado" />
                                 </div>
                             </div>
                         </div>            
@@ -32,21 +32,21 @@
                             <div class="col-5 col-sm-5 col-md-5 col-lg-5">
                                 <div class="form-group">
                                     <label for="isbnLibro">Código ISBN*</label>
-                                    <input type="text" formControlName="isbnLibro" class="form-control" required />
+                                    <input type="text" formControlName="isbnLibro" class="form-control" required [disabled]="alquilerCreado" />
                                     <small *ngIf="formularioAltaPedido.get('isbnLibro')?.invalid && formularioAltaPedido.get('isbnLibro')?.touched">El código ISBN es inválido (debe ser ISBN-10 o ISBN-13)</small>
                                 </div>
                             </div>
                             <div class="col-5 col-sm-5 col-md-5 col-lg-5">
                                 <div class="form-group">
                                     <label for="isbnLibro">Puntos a canjear</label>
-                                    <input type="number" formControlName="puntosCanjeados" class="form-control" required />                     
+                                    <input type="number" formControlName="puntosCanjeados" class="form-control" required [disabled]="alquilerCreado" />                     
                                 </div>
                             </div>
                         </div>
                         <br>
                         <div class="row">
                             <div class="col-5 col-sm-5 col-md-5 col-lg-5">
-                                <button [disabled]="formularioAltaPedido.get('isbnLibro')?.invalid || formularioAltaPedido.get('isbnLibro')?.disabled" class="btn btnVerde" type="button" (click)="agregarDetalle()">Agregar libro</button>
+                                <button [disabled]="formularioAltaPedido.get('isbnLibro')?.invalid || formularioAltaPedido.get('isbnLibro')?.disabled || alquilerCreado" class="btn btnVerde" type="button" (click)="agregarDetalle()">Agregar libro</button>
                             </div>
                         </div>
                         
@@ -56,7 +56,7 @@
                             </div>
 
                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 mt-2">
-                                <button class="btn btnConfirmar" type="button" (click)="crearAlquiler()">Confirmar alquiler</button>
+                                <button [disabled]="alquilerCreado" class="btn btnConfirmar" type="button" (click)="crearAlquiler()">Confirmar alquiler</button>
                             </div>
                         </div>
                     </form>
@@ -85,6 +85,14 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <br><br>
+                <div *ngIf="alquilerCreado" class="row mt-5"> 
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="col-4">
+                            <a [href]="paymentUrl" target="_blank" class="btn btnMP w-100">Pagar alquiler con Mercado Pago!</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -20,4 +20,8 @@ export class AlquilerService {
   PostRegistrarAlquiler(a:any) : Observable<any>{
     return this.http.post(this.urlbase + "Alquileres/registrar-alquiler", a, { headers : this.headers });
   }
+
+  PostCrearPreferencia(a:any) : Observable<any>{
+    return this.http.post(this.urlbase + "MercadoPago/crear-preferencia", a, { headers : this.headers });
+  }
 }
