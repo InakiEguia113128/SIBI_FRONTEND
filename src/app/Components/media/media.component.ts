@@ -205,6 +205,7 @@ export class MediaComponent implements OnInit {
       },
       error: (error) => {
         this.spinner.hide();
+        this.formularioAltaPedido.get('puntosCanjeados')?.disable();
         this.toastr.warning('No estás registrado como socio. No puedes acceder a descuentos ni beneficios.', '="(', {
           timeOut: 7000
         });

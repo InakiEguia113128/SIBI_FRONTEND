@@ -10,6 +10,7 @@ import { SettingsComponent } from './Components/settings/settings.component';
 import { RegisterComponent } from './Components/register/register.component';
 import { CatalogComponent } from './Components/catalog/catalog.component';
 import { AuthGuard } from './Guards/guards/auth.guard';
+import { RentsComponent } from './Components/rents/rents.component';
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
@@ -20,7 +21,8 @@ const routes: Routes = [
   { path: 'media', component: MediaComponent, canActivate: [AuthGuard] },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
   { path: 'register', component: RegisterComponent },
-  { path: 'catalog', component: CatalogComponent, canActivate: [AuthGuard] }
+  { path: 'catalog', component: CatalogComponent, canActivate: [AuthGuard] },
+  { path: 'rents', component: RentsComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

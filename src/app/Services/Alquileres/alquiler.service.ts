@@ -24,4 +24,17 @@ export class AlquilerService {
   PostCrearPreferencia(a:any) : Observable<any>{
     return this.http.post(this.urlbase + "MercadoPago/crear-preferencia", a, { headers : this.headers });
   }
+
+  ObtenerAlquileres(a:any) : Observable<any>{
+    debugger
+    return this.http.post(this.urlbase + "Alquileres/obtener-alquileres", a, { headers : this.headers });
+  }
+
+  ObtenerAlquiler(id:any) : Observable<any>{
+    return this.http.get(this.urlbase + `Alquileres/obtener-alquiler/${id}`, { headers : this.headers });
+  }
+
+  ObtenerEstadosAlquiler() : Observable<any>{
+    return this.http.get(this.urlbase + `Alquileres/obtener-estados-alquiler`, { headers : this.headers });
+  }
 }

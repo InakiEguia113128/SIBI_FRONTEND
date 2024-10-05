@@ -1,0 +1,243 @@
+<div *ngIf="!modoVistaAlquiler" class="container rounded-4 pad">
+    <h1 *ngIf="!esSocio">Listado de Alquileres</h1>
+    <h1 *ngIf="esSocio">Mis alquileres</h1>
+    <hr />
+    <div class="row py-2 justify-content-center">
+        <button class="btn btnVerde" (click)="abrirFiltro()">Filtrar</button>
+    </div>
+    <hr />
+    <div class="table-responsive">
+    <table class="table table-hover mtc-5">
+        <thead class="table table-hover mtc-5 table-sm ">
+            <tr>
+                <th mat-sort-header="nombre" scope="col">Nombre socio</th>
+                <th mat-sort-header="nombre" scope="col">Nro documento</th>
+                <th mat-sort-header="subotal" scope="col">Subtotal</th>
+                <th mat-sort-header="estado" scope="col">Estado</th>
+                <th mat-sort-header="estado" scope="col">Fecha de entrega</th>
+                <th mat-sort-header="estado" scope="col">Fecha de devolución</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let alquiler of alquileres">
+                <td>{{alquiler.socio.nombre}} {{alquiler.socio.apellido}}</td>
+                <td>{{alquiler.socio?.nroDocumento || '-' }}</td>
+                <td>{{alquiler.montoTotal | currency:'$':'symbol':'1.2-2'}}</td>
+                <td>{{alquiler.descripcion}}</td>
+                <td>{{alquiler.fechaDesde | date: 'dd/MM/yyyy'}}</td>
+                <td>{{alquiler.fechaHasta | date: 'dd/MM/yyyy'}}</td>
+                <td><i type="button" class="fal fa-search" (click)="verAlquiler(alquiler)" tippy="Ver alquiler"></i></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<mat-paginator 
+    [length]="length" 
+    [pageSize]="pageSize" 
+    [pageSizeOptions]="[5, 10, 25]" 
+    (page)="cambiarPagina($event)">
+</mat-paginator>
+</div>
+
+<div class="modal" [ngClass]="{'show': mostrarFiltros, 'd-none': !mostrarFiltros}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Filtros</h5>
+          <button type="button" class="close" (click)="cerrarFiltro()">&times;</button>
+        </div>
+        <div *ngIf="!esSocio" class="modal-body">
+          <form (ngSubmit)="aplicarFiltros()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Nombre de socio</label>
+                  <input type="text" class="form-control" [(ngModel)]="filtros.nombre" name="nombre">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Apellido de socio</label>
+                  <input type="text" class="form-control" [(ngModel)]="filtros.apellido" name="apellido">
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Nro de documento socio</label>
+                      <input type="text" class="form-control" [(ngModel)]="filtros.nroDocumentoSocio" name="nroDocumentoSocio">
+                    </div>
+                </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Fecha de entrega</label>
+                  <input type="date" class="form-control" [(ngModel)]="filtros.fechaDesde" name="fechaDesde">
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Fecha de devolución</label>
+                  <input type="date" class="form-control" [(ngModel)]="filtros.fechaHasta" name="fechaHasta">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Estado</label>
+                  <select class="form-control" [(ngModel)]="filtros.idEstadoAlquiler" name="idEstadoAlquiler">
+                    <option *ngFor="let estado of estadosAlquiler" [value]="estado.idEstadoAlquiler">{{ estado.descripcion }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row py-2 justify-content-center">
+              <button type="submit" class="btn btnVerde">Aplicar</button>
+            </div>
+            <div class="row py-2 justify-content-center">
+              <button type="button" class="btn btnAmarillo" (click)="limpiarFiltros()">Limpiar</button>
+            </div>
+          </form>
+        </div>
+
+        <div *ngIf="esSocio" class="modal-body">
+            <form (ngSubmit)="aplicarFiltros()">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Fecha de entrega</label>
+                    <input type="date" class="form-control" [(ngModel)]="filtros.fechaDesde" name="fechaDesde">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Fecha de devolución</label>
+                      <input type="date" class="form-control" [(ngModel)]="filtros.fechaHasta" name="fechaHasta">
+                    </div>
+                  </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Estado</label>
+                    <select class="form-control" [(ngModel)]="filtros.idEstadoAlquiler" name="idEstadoAlquiler">
+                      <option *ngFor="let estado of estadosAlquiler" [value]="estado.idEstadoAlquiler">{{ estado.descripcion }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="row py-2 justify-content-center">
+                <button type="submit" class="btn btnVerde">Aplicar</button>
+              </div>
+              <div class="row py-2 justify-content-center">
+                <button [disabled]="!limpiarActivados" type="button" class="btn btnAmarillo" (click)="limpiarFiltros()">Limpiar</button>
+              </div>
+            </form>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="modoVistaAlquiler" class="container rounded-4 pad">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <h1>Alquiler de libros</h1>
+                <hr />
+                <div *ngIf="esSocioRegistrado === true" class="card my-3 shadow-sm border-light">
+                    <div class="card-header bg-dark-green text-white text-center">
+                      <h5 class="card-title">Información del Socio</h5>
+                    </div>
+                    <div class="card-body">
+                      <p class="card-text">
+                        <strong>Nombre:</strong> {{ alquilerSeleccionado.socio.nombre }} {{ alquilerSeleccionado.socio.apellido }}<br>
+                        <strong>Documento:</strong> {{ alquilerSeleccionado.socio.nroDocumento || '-' }}<br>
+                        <strong>Teléfono:</strong> {{ alquilerSeleccionado.socio.numeroTelefono || '-' }}<br>
+                        <strong>Dirección:</strong> {{ alquilerSeleccionado.socio.calle || '-' }} {{ alquilerSeleccionado.socio.altura || '-' }}<br>
+                      </p>
+                    </div>
+                  </div>
+                  
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <form [formGroup]="formularioAltaPedido">
+                        <div class="row">
+                            <div class="col-5 col-sm-5 col-md-5 col-lg-5">
+                                <div class="form-group">
+                                    <label class="form-label">Fecha desde*</label>
+                                    <input type="date" class="form-control bordeNone" formControlName="fechaDesde" [disabled]="alquilerCreado" />
+                                </div>
+                            </div>
+                            <div class="col-5 col-sm-5 col-md-5 col-lg-5">
+                                <div class="form-group">
+                                    <label class="form-label">Fecha hasta*</label>
+                                    <input type="date" class="form-control bordeNone" formControlName="fechaHasta" [disabled]="alquilerCreado" />
+                                </div>
+                            </div>
+                        </div>            
+                        <div class="row">
+                            <div class="col-10 col-sm-10 col-md-10 col-lg-10">
+                                <div *ngIf="formularioAltaPedido.errors?.['fechasInvalidas'] && formularioAltaPedido.get('fechaDesde')?.touched && formularioAltaPedido.get('fechaHasta')?.touched" class="alert alert-danger mt-2">
+                                    La fecha "desde" no puede ser mayor a la fecha "hasta".
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-5 col-sm-5 col-md-5 col-lg-5">
+                                <div class="form-group">
+                                    <label for="isbnLibro">Código ISBN*</label>
+                                    <input type="text" formControlName="isbnLibro" class="form-control" required [disabled]="alquilerCreado" />
+                                    <small *ngIf="formularioAltaPedido.get('isbnLibro')?.invalid && formularioAltaPedido.get('isbnLibro')?.touched">El código ISBN es inválido (debe ser ISBN-10 o ISBN-13)</small>
+                                </div>
+                            </div>
+                            <div class="col-5 col-sm-5 col-md-5 col-lg-5">
+                                <div class="form-group">
+                                    <label for="isbnLibro">Puntos a canjear</label>
+                                    <input type="number" formControlName="puntosCanjeados" class="form-control" required [disabled]="alquilerCreado" />                     
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        
+                        <div class="row align-items-center py-2">
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6 mt-2">
+                                <strong>Total: {{ total | currency }}</strong>
+                            </div>
+
+                            <div class="col-6 col-sm-6 col-md-6 col-lg-6 mt-2">
+                                <button  class="btn btnRojo" type="button" (click)="volver()">Volver</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 py-1 mt-2 table-container table-responsive">
+                    <table class="table table-hover table-sm caption-top">
+                        <thead>
+                            <tr>
+                                <th scope="col">Libro</th>
+                                <th scope="col">Precio alquiler diario</th>
+                                <th scope="col">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let detalle of this.detalleAlquiler">
+                                <td>{{ detalle.titulo }}</td>
+                                <td>{{ detalle.precioAlquiler | currency:'$':'symbol':'1.2-2' }}</td>
+                                <td>{{ calcularSubtotal(detalle) | currency:'$':'symbol':'1.2-2' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>           
+            </div>
+        </div>
+    </div>
+</div>

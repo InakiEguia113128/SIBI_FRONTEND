@@ -24,6 +24,8 @@ import { EditProductComponent } from './Components/edit-product/edit-product.com
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { LibrosService } from './Services/Libros/libros.service';
 import { SociosService } from './Services/Socios/socios.service';
+import { RentsComponent } from './Components/rents/rents.component';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,8 @@ import { SociosService } from './Services/Socios/socios.service';
     LoginComponent,
     RegisterComponent,
     CatalogComponent,
-    EditProductComponent
+    EditProductComponent,
+    RentsComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +58,8 @@ import { SociosService } from './Services/Socios/socios.service';
       timeOut: 3000,
       positionClass: 'toast-top-right',
       preventDuplicates: true, 
-    })
+    }),
+    MatPaginatorModule
   ],
   providers: [UserService, ToastrService, LibrosService, SociosService, NgxSpinnerService],
   bootstrap: [AppComponent],

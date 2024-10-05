@@ -65,7 +65,7 @@ export class CatalogComponent implements OnInit {
       codigoIsbn: ['', [Validators.required, this.validarISBN.bind(this)]],
       titulo: ['', [Validators.required]],
       cantidadEjemplares: [0, [Validators.required, Validators.min(1)]],
-      descripcion: ['', [Validators.required, Validators.maxLength(200)]],
+      descripcion: ['', [Validators.required, Validators.maxLength(350)]],
       nombreAutor: ['', [Validators.required]],
       editorial: ['', [Validators.required]],
       fechaPublicacion: ['', [Validators.required]],

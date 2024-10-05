@@ -44,9 +44,23 @@ export const navbarData = [
     {
         routeLink: 'media',
         icon : 'fal fa-shopping-basket',
-        label: 'Alquileres',
+        label: 'Nuevo alquiler',
         logout: false,
         roles: ["Socio","Socio registrado"]
+    },
+    {
+        routeLink: 'rents',
+        icon : 'fal fa-bookmark',
+        label: 'Mis alquileres',
+        logout: false,
+        roles: ["Socio","Socio registrado"]
+    },
+    {
+        routeLink: 'rents',
+        icon : 'fal fa-bookmark',
+        label: 'Alquileres',
+        logout: false,
+        roles: ["Empleado","Administrador"]
     },
     {
         routeLink: 'settings',
