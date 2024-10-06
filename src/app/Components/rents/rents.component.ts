@@ -16,6 +16,9 @@ export class RentsComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  mostrarModal = false;
+  nuevoEstado: string = '';
+  idAlquilerSeleccionadoCambioEstado : any;
   alquilerSeleccionado : any = {};
   modoVistaAlquiler: boolean = false;
   esSocioRegistrado: boolean = false;
@@ -198,5 +201,68 @@ export class RentsComponent implements OnInit {
 
   volver(){
     this.modoVistaAlquiler = false;
+  }
+
+  cambiarEstadoModal(idAlquilerSeleccionadoCambioEstado : any) {
+    this.idAlquilerSeleccionadoCambioEstado = idAlquilerSeleccionadoCambioEstado;
+    this.mostrarModal = true;
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+    this.nuevoEstado = "";
+    this.idAlquilerSeleccionadoCambioEstado = "";
+  }
+
+  aceptarCambioEstado() {
+    
+    debugger
+
+    if (this.nuevoEstado === "") {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Por favor, selecciona un estado antes de continuar.',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+    
+    const estadoEncontrado = this.estadosAlquiler.find((estado: { idEstadoAlquiler: string; }) => estado.idEstadoAlquiler === this.nuevoEstado);
+
+    Swal.fire({
+      title: 'Confirmar Cambio de Estado',
+      text: `¿Estás seguro de que deseas cambiar el cambio de estado a "${estadoEncontrado.descripcion}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cambiar',
+      cancelButtonText: 'No, cancelar'
+  }).then((result) => {
+      if (result.isConfirmed) {
+          this.spinner.show();
+
+          const payload = {
+            idEstadoAlquiler : this.nuevoEstado,
+            idAlquiler : this.idAlquilerSeleccionadoCambioEstado
+          }
+
+          this.servicioAlquileres.CambiarEstadoAlquiler(payload).subscribe({
+            next : (resp) => {
+              this.obtenerAlquileres();
+              this.cerrarModal();
+              Swal.fire({
+                icon: 'success',
+                title: 'Estado cambiado',
+                text: `El estado ha sido cambiado a "${estadoEncontrado.descripcion}".`,
+                confirmButtonText: 'Aceptar'
+            });
+            },
+            error : (error) =>{
+              this.spinner.hide();
+              Swal.fire('Error', error.error.error, 'error');
+            }
+          });       
+      }
+    });
   }
 }

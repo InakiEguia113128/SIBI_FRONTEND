@@ -27,7 +27,11 @@
                 <td>{{alquiler.descripcion}}</td>
                 <td>{{alquiler.fechaDesde | date: 'dd/MM/yyyy'}}</td>
                 <td>{{alquiler.fechaHasta | date: 'dd/MM/yyyy'}}</td>
-                <td><i type="button" class="fal fa-search" (click)="verAlquiler(alquiler)" tippy="Ver alquiler"></i></td>
+                <td>
+                    <i type="button" class="fal fa-search" (click)="verAlquiler(alquiler)" tippy="Ver alquiler"></i>
+                    <i type="button" *ngIf="!esSocio" style="margin-left: 20px;" class="fal fa-exchange" (click)="cambiarEstadoModal(alquiler.idAlquiler)" tippy="Cambiar estado"></i>                                 
+                </td>
+
             </tr>
         </tbody>
     </table>
@@ -240,4 +244,28 @@
             </div>
         </div>
     </div>
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': mostrarModal}" [style.display]="mostrarModal ? 'block' : 'none'">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCambioEstadoLabel">Cambiar Estado del Alquiler</h5>
+        <button type="button" class="close" (click)="cerrarModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="estado">Selecciona el nuevo estado:</label>
+        <select id="estado" [(ngModel)]="nuevoEstado" class="form-control">
+          <option *ngFor="let estado of estadosAlquiler" [value]="estado.idEstadoAlquiler">{{ estado.descripcion }}</option>
+        </select>
+      </div>
+      <div class="modal-footer align-items-center">
+        <button type="button" class="btn btnRojo me-auto" (click)="cerrarModal()">Cancelar</button>
+        <button type="button" class="btn btnVerde" (click)="aceptarCambioEstado()">Aceptar</button>
+    </div>
+    </div>
+  </div>
 </div>

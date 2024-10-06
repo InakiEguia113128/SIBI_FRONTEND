@@ -26,7 +26,6 @@ export class AlquilerService {
   }
 
   ObtenerAlquileres(a:any) : Observable<any>{
-    debugger
     return this.http.post(this.urlbase + "Alquileres/obtener-alquileres", a, { headers : this.headers });
   }
 
@@ -36,5 +35,9 @@ export class AlquilerService {
 
   ObtenerEstadosAlquiler() : Observable<any>{
     return this.http.get(this.urlbase + `Alquileres/obtener-estados-alquiler`, { headers : this.headers });
+  }
+
+  CambiarEstadoAlquiler(p:any) : Observable<any>{
+    return this.http.put(this.urlbase + `Alquileres/cambiar-estado`, p, { headers : this.headers });
   }
 }
