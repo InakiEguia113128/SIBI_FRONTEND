@@ -3,6 +3,12 @@
         <div class="col-12">
             <div class="row">
                 <h1>Alquiler de libros</h1>
+                <h5 *ngIf="this.socio.activo && this.socio.puntosAcumulados != null && this.socio.puntosAcumulados != 0 && this.socio.puntosAcumulados != 1" style="text-align: center;">
+                    Tienes <b>{{ this.socio.puntosAcumulados }}</b> puntos disponibles para canjear por descuentos!!!
+                </h5>
+                <h5 *ngIf="this.socio.activo && this.socio.puntosAcumulados == 1" style="text-align: center;">
+                    Tienes <b>{{ this.socio.puntosAcumulados }}</b> punto disponible para canjear por descuentos!!!
+                </h5>
                 <hr />
                 <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                     <form [formGroup]="formularioAltaPedido">
@@ -39,7 +45,10 @@
                             <div class="col-5 col-sm-5 col-md-5 col-lg-5">
                                 <div class="form-group">
                                     <label for="isbnLibro">Puntos a canjear</label>
-                                    <input type="number" formControlName="puntosCanjeados" class="form-control" required [disabled]="alquilerCreado" />                     
+                                    <input type="number" formControlName="puntosCanjeados" class="form-control" required [disabled]="alquilerCreado" /> 
+                                    <small *ngIf="formularioAltaPedido.get('puntosCanjeados')?.hasError('maxPointsExceeded')">
+                                        No puedes canjear más puntos de los que tienes acumulados.
+                                    </small>                    
                                 </div>
                             </div>
                         </div>
@@ -87,7 +96,7 @@
                     </table>
                 </div>
                 <br><br>
-                <div *ngIf="alquilerCreado" class="row mt-5"> 
+                <div *ngIf="alquilerCreado || this.total != 0" class="row mt-5"> 
                     <div class="col-12 d-flex justify-content-center">
                         <div class="col-4">
                             <a [href]="paymentUrl" target="_blank" class="btn btnMP w-100">Pagar alquiler con Mercado Pago!</a>

@@ -194,9 +194,21 @@ export class RentsComponent implements OnInit {
   }
 
   actualizarTotal(): void {
+    let puntosCanjeados = this.formularioAltaPedido.get('puntosCanjeados')?.value;
+    const descuentoPorPunto = 50;
+    const descuentoTotal = puntosCanjeados * descuentoPorPunto; 
+
     this.total = this.detalleAlquiler.reduce((acc: any, detalle: { subtotal: any; }) => {
         return acc + (detalle.subtotal || 0); 
     }, 0);
+
+    // Aplica el descuento
+    this.total -= descuentoTotal;
+
+    // Asegúrate de que el total no sea negativo
+    if (this.total < 0) {
+        this.total = 0;
+    }
   }
 
   volver(){

@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -192,7 +192,13 @@ export class MediaComponent implements OnInit {
             timeOut: 7000
           });
         } else if (this.socio.puntosAcumulados && this.socio.puntosAcumulados > 0) {
+          const maxLength = this.socio.puntosAcumulados; 
           this.formularioAltaPedido.get('puntosCanjeados')?.enable();
+          this.formularioAltaPedido.get('puntosCanjeados')?.setValidators([
+            Validators.required,
+            this.maxPointsValidator(maxLength) 
+          ]);
+          this.formularioAltaPedido.get('puntosCanjeados')?.updateValueAndValidity();
           this.toastr.success('Tienes puntos acumulados disponibles para canjear!', 'Eres socio!', {
             timeOut: 7000
           });
@@ -227,12 +233,29 @@ export class MediaComponent implements OnInit {
   }
 
   actualizarTotal(): void {
+    let puntosCanjeados = this.formularioAltaPedido.get('puntosCanjeados')?.value;
+    const descuentoPorPunto = 50;
+    const descuentoTotal = puntosCanjeados * descuentoPorPunto; 
+
     this.total = this.detalleAlquiler.reduce((acc: any, detalle: { subtotal: any; }) => {
         return acc + (detalle.subtotal || 0); 
     }, 0);
-}
 
-crearAlquiler(): void {
+    this.total -= descuentoTotal;
+
+    if (this.total < 0) {
+        this.total = 0;
+    }
+  }
+
+  maxPointsValidator(maxPoints: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      return value > maxPoints ? { maxPointsExceeded: true } : null;
+    };
+  }
+
+  crearAlquiler(): void {
   this.spinner.show();
   
   if (this.detalleAlquiler.length === 0) {
@@ -269,14 +292,25 @@ crearAlquiler(): void {
             this.servicioAlquileres.PostRegistrarAlquiler(alquilerData).subscribe({
               next: (resp) => {
                 this.spinner.hide();
-                console.log(this.paymentUrl);
+                console.log(this.paymentUrl)
+
+                var textoAlerta = "";
+                
+                if(this.total != 0){
+                  textoAlerta = "Se registró su alquiler con éxito, Ahora puedes completar el pago."
+                }else{
+                  textoAlerta = "Se registró su alquiler con éxito"
+                }
+
                 Swal.fire({
                   icon: 'success',
                   title: 'Perfecto...',
-                  text: 'Se registró su alquiler con éxito, Ahora puedes completar el pago.',
+                  text: textoAlerta,
                 }).then(() => {
                   const isbnControl = this.formularioAltaPedido.get('isbnLibro');
+                  const puntosCanjeadosControl = this.formularioAltaPedido.get('puntosCanjeados');
                   isbnControl?.disable(); 
+                  puntosCanjeadosControl?.disable();
                   this.alquilerCreado = true;
                 });
               },
