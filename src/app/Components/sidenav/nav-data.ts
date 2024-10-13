@@ -2,7 +2,7 @@ export const navbarData = [
     {
         routeLink: 'dashboard',
         icon : 'fal fa-home',
-        label: 'Dashboard',
+        label: 'Inicio',
         logout: false,
         roles: ["Empleado","Socio","Administrador","Socio registrado"]
     },
@@ -32,7 +32,7 @@ export const navbarData = [
         icon : 'fal fa-tags',
         label: 'Descuentos',
         logout: false,
-        roles: ["Empleado","Socio","Administrador","Socio registrado"]
+        roles: ["Proximamente"]
     },
     {
         routeLink: 'pages',

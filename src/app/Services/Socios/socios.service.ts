@@ -44,4 +44,12 @@ export class SociosService {
   desactivarSocio(idUsuario:string): Observable<any> {
     return this.http.put(`${this.urlbase}Socios/desactivar-socio/${idUsuario}`, null, { headers : this.headers});
   }
+
+  obtenerRanking(): Observable<any> {
+    return this.http.get(`${this.urlbase}Socios/obtener-ranking`, { headers : this.headers});
+  }
+
+  obtenerSocioEnRanking(idSocio:string): Observable<any> {
+    return this.http.get(`${this.urlbase}Socios/obtener-ranking/${idSocio}`, { headers : this.headers});
+  }
 }

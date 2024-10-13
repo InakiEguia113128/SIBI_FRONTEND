@@ -97,7 +97,6 @@ export class RentsComponent implements OnInit {
       salta: saltar 
     }).subscribe({
       next: (resp) => {
-        
         this.spinner.hide();
         this.alquileres = resp.resultado; 
         if(this.recalcularToal){

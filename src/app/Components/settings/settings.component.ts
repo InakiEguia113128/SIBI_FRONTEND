@@ -54,7 +54,7 @@ export class SettingsComponent implements OnInit {
         });
         this.rolUsuario = usuario.roles[0]
       },
-      error: (error) => { 
+      error: (error) => {
         this.spinner.hide(); 
         Swal.fire({
           icon: 'error',

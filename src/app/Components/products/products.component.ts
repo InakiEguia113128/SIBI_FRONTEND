@@ -35,7 +35,7 @@ export class ProductsComponent implements OnInit {
     });
 
     this.form = this.fb.group({
-      codigoIsbn: ['', [Validators.required, this.validarISBN]],
+      codigoIsbn: ['', [Validators.required, this.validarISBN.bind(this)]],
       titulo: ['', [Validators.required]],
       cantidadEjemplares: [0, [Validators.required, Validators.min(1)]],
       descripcion: ['', [Validators.required, Validators.maxLength(350)]],
@@ -136,7 +136,6 @@ export class ProductsComponent implements OnInit {
     this.fileInput.nativeElement.value = '';
   }
 
-  // Función de validación personalizada para ISBN
   validarISBN(control: AbstractControl): ValidationErrors | null {
     const isbn = control.value;
 
@@ -153,7 +152,20 @@ export class ProductsComponent implements OnInit {
     }
   }
 
-  // Validación para ISBN-10
+  validarISBN13(isbn: string): boolean {
+    if (!/^\d{13}$/.test(isbn)) {
+      return false;
+    }
+
+    let suma = 0;
+    for (let i = 0; i < 12; i++) {
+      suma += parseInt(isbn[i], 10) * (i % 2 === 0 ? 1 : 3);
+    }
+
+    const verificador = (10 - (suma % 10)) % 10;
+    return verificador === parseInt(isbn[12], 10);
+  }
+
   validarISBN10(isbn: string): boolean {
     if (!/^\d{9}[\dX]$/.test(isbn)) {
       return false;
@@ -168,20 +180,5 @@ export class ProductsComponent implements OnInit {
     suma += ultimoCaracter === 'X' ? 10 : parseInt(ultimoCaracter, 10);
 
     return suma % 11 === 0;
-  }
-
-  // Validación para ISBN-13
-  validarISBN13(isbn: string): boolean {
-    if (!/^\d{13}$/.test(isbn)) {
-      return false;
-    }
-
-    let suma = 0;
-    for (let i = 0; i < 12; i++) {
-      suma += parseInt(isbn[i], 10) * (i % 2 === 0 ? 1 : 3);
-    }
-
-    const verificador = (10 - (suma % 10)) % 10;
-    return verificador === parseInt(isbn[12], 10);
   }
 }

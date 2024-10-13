@@ -59,6 +59,7 @@ export class PagesComponent implements OnInit {
           this.esSocioRegistrado = true;
           this.esSocioActivo = true;
           this.spinner.hide();
+          this.servicioUsuario.agregarRolUsuarioSocioActivo();
           Swal.fire('Perfecto...', 'Socio registrado correctamente', 'success');
         },
         error: (error) => {

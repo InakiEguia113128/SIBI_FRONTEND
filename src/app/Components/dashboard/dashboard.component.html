@@ -1,1 +1,18 @@
-<p>dashboard works!</p>
+<div class="container rounded-4 pad">
+    <h1>Socios destacados</h1>
+    <h4 *ngIf="esSocioActivo">Te encuentras en el puesto {{socioActivo.posicion}} del ranking!</h4>
+    <hr>
+    <div *ngFor="let socio of ranking; let i = index" [ngClass]="getSocioClass(i)" class="socio-card">
+        <div class="ranking-container">
+          <!-- Información del socio -->
+          <div>
+            <strong>{{ socio.nombre }} {{ socio.apellido }}</strong>
+            <p>Cantidad de Libros Alquilados: {{ socio.cantidadLibrosAlquilados }}</p>
+          </div>
+          <!-- Posición en el ranking -->
+          <div class="ranking-position">
+            <h3>#{{ i + 1 }}</h3> <!-- Mostramos el número de posición en el ranking -->
+          </div>
+        </div>
+      </div>
+</div>

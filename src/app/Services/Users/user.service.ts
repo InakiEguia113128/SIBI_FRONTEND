@@ -66,4 +66,17 @@ export class UserService {
 
     return usuario;
   }
+
+  agregarRolUsuarioSocioActivo(): any {
+    let json = localStorage.getItem('usuario');
+    let usuario = json != null ? JSON.parse(json) : null;
+
+    if (usuario && usuario.roles) {
+      if (!usuario.roles.includes("Socio registrado")) {
+          usuario.roles.push("Socio registrado");        
+          localStorage.setItem('usuario', JSON.stringify(usuario));
+      }
+    }
+    return usuario;
+  }
 }
