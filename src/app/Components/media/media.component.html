@@ -76,7 +76,8 @@
                         <thead>
                             <tr>
                                 <th scope="col">Libro</th>
-                                <th scope="col">Precio alquiler diario</th>
+                                <th *ngIf="this.socio.activo && this.puestoSocioRanking <= 10" scope="col">Precio alquiler diario <b>(15% off)</b></th>
+                                <th *ngIf="this.socio.activo && this.puestoSocioRanking > 10" scope="col">Precio alquiler diario</th>
                                 <th scope="col">Subtotal</th>
                                 <th scope="col">Acciones</th>
                             </tr>

@@ -100,7 +100,7 @@ export class RentsComponent implements OnInit {
         this.spinner.hide();
         this.alquileres = resp.resultado; 
         if(this.recalcularToal){
-          this.length = resp.resultado[0].total; 
+          this.length = (resp.resultado && resp.resultado.length > 0) ? resp.resultado[0].total : 0;
         }
         this.recalcularToal = false;
 

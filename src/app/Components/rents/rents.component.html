@@ -196,11 +196,6 @@
                         <br>
                         <div class="row">
                             <div class="col-5 col-sm-5 col-md-5 col-lg-5">
-                                <div class="form-group">
-                                    <label for="isbnLibro">Código ISBN*</label>
-                                    <input type="text" formControlName="isbnLibro" class="form-control" required [disabled]="alquilerCreado" />
-                                    <small *ngIf="formularioAltaPedido.get('isbnLibro')?.invalid && formularioAltaPedido.get('isbnLibro')?.touched">El código ISBN es inválido (debe ser ISBN-10 o ISBN-13)</small>
-                                </div>
                             </div>
                             <div class="col-5 col-sm-5 col-md-5 col-lg-5">
                                 <div class="form-group">

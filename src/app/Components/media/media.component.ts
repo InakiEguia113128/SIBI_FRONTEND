@@ -24,6 +24,7 @@ export class MediaComponent implements OnInit {
   total: number = 0;
   alquilerCreado: boolean = false; 
   paymentUrl: string | null = null;
+  puestoSocioRanking : number = 99;
 
   constructor(
     public fb: FormBuilder,
@@ -101,8 +102,11 @@ export class MediaComponent implements OnInit {
     next: (resp) => {
       this.spinner.hide();
       if (resp.resultado) {
-        this.detalleAlquiler.push(resp.resultado); 
+        if(this.socio.activo && this.puestoSocioRanking <= 10){     
+          resp.resultado.precioAlquiler = resp.resultado.precioAlquiler * 0.85
+        }
 
+        this.detalleAlquiler.push(resp.resultado); 
         this.toastr.success('Libro agregado con éxito', 'Genial!', {
           timeOut: 7000
         });
@@ -202,11 +206,13 @@ export class MediaComponent implements OnInit {
           this.toastr.success('Tienes puntos acumulados disponibles para canjear!', 'Eres socio!', {
             timeOut: 7000
           });
+          this.obtenerPuestoRanking();
         } else {
           this.formularioAltaPedido.get('puntosCanjeados')?.disable();
           this.toastr.info('No tienes puntos acumulados actualmente. Al realizar alquileres, los puntos se acumularán.', 'Puntos no disponibles', {
             timeOut: 7000
           });
+          this.obtenerPuestoRanking();
         }
       },
       error: (error) => {
@@ -325,5 +331,17 @@ export class MediaComponent implements OnInit {
       Swal.fire('Error', 'Hubo un problema al crear la preferencia.', 'error');
     }
   });
+  }
+  
+  obtenerPuestoRanking(){
+    this.servicioSocio.obtenerSocioEnRanking(this.servicioUsuario.getUserIdFromLocalStorage()).subscribe({
+      next : (resp) => {
+        this.puestoSocioRanking = resp.resultado.posicion;
+        this.spinner.hide();
+      },
+      error : (error) => {
+        this.spinner.hide();
+      }
+    });
   }
 }
