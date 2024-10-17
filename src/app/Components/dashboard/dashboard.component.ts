@@ -57,7 +57,6 @@ export class DashboardComponent implements OnInit {
       },
       error : (error) => {
         this.spinner.hide();
-        Swal.fire('Error', error.error.error, 'error');
       }
     })
   }

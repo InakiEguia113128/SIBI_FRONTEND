@@ -25,6 +25,7 @@ export class MediaComponent implements OnInit {
   alquilerCreado: boolean = false; 
   paymentUrl: string | null = null;
   puestoSocioRanking : number = 99;
+  minDate: string;
 
   constructor(
     public fb: FormBuilder,
@@ -36,6 +37,9 @@ export class MediaComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService
   ) {
+    const today = new Date();
+    this.minDate = today.toISOString().split('T')[0];
+
     this.formularioAltaPedido = this.fb.group({
       montoTotal: [null, 0],
       fechaDesde: [formatDate(new Date(), 'yyyy-MM-dd', 'en'), [Validators.required]],

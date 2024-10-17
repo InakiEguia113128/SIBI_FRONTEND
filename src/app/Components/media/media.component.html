@@ -16,7 +16,13 @@
                             <div class="col-5 col-sm-5 col-md-5 col-lg-5">
                                 <div class="form-group">
                                     <label class="form-label">Fecha desde*</label>
-                                    <input type="date" class="form-control bordeNone" formControlName="fechaDesde" [disabled]="alquilerCreado" />
+                                    <input 
+                                        type="date" 
+                                        class="form-control bordeNone" 
+                                        formControlName="fechaDesde" 
+                                        [disabled]="alquilerCreado" 
+                                        [attr.min]="minDate"
+                                    />
                                 </div>
                             </div>
                             <div class="col-5 col-sm-5 col-md-5 col-lg-5">

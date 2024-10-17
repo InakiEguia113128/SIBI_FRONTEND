@@ -172,23 +172,41 @@ export class PagesComponent implements OnInit {
     });   
   }
 
-  modificarSocio(){
-    this.spinner.show();
-    if (this.form.valid) {
-      const socioData = { ...this.form.value };
-      socioData.numeroTelefono = Number(socioData.numeroTelefono);
-      socioData.nroDocumento = Number(socioData.nroDocumento);
-
-      this.servicioSocio.modificarSocio(socioData,this.servicioUsuario.getUserIdFromLocalStorage()).subscribe({
-        next: () => {
-          Swal.fire('Perfecto...', 'Información modificada correctamente', 'success');
+  modificarSocio() {
+    Swal.fire({
+      title: '¿Seguro que deseas modificar tus datos de socio?',
+      text: 'No se podrán modificar de nuevo hasta el próximo mes.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.spinner.show();
+  
+        if (this.form.valid) {
+          const socioData = { ...this.form.value };
+          socioData.numeroTelefono = Number(socioData.numeroTelefono);
+          socioData.nroDocumento = Number(socioData.nroDocumento);
+  
+          this.servicioSocio.modificarSocio(socioData, this.servicioUsuario.getUserIdFromLocalStorage()).subscribe({
+            next: () => {
+              Swal.fire('Perfecto...', 'Información modificada correctamente', 'success');
+              this.spinner.hide();
+            },
+            error: (error) => {
+              debugger
+              Swal.fire('Error', error.error.error, 'error');
+              this.spinner.hide();
+            }
+          });
+        } else {
           this.spinner.hide();
-        },
-        error: (error) => {
-          Swal.fire('Error', 'No se pudo modificar tu información', 'error');
-          this.spinner.hide();
+          Swal.fire('Error', 'Formulario inválido', 'error');
         }
-      });
-    }
-  }
+      }
+    });
+  }  
 }
