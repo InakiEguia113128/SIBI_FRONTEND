@@ -175,7 +175,6 @@ export class PagesComponent implements OnInit {
   modificarSocio() {
     Swal.fire({
       title: '¿Seguro que deseas modificar tus datos de socio?',
-      text: 'No se podrán modificar de nuevo hasta el próximo mes.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
