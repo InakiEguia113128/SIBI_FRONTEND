@@ -197,7 +197,6 @@ export class PagesComponent implements OnInit {
               this.spinner.hide();
             },
             error: (error) => {
-              debugger
               Swal.fire('Error', error.error.error, 'error');
               this.spinner.hide();
             }
