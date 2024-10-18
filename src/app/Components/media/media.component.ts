@@ -38,6 +38,7 @@ export class MediaComponent implements OnInit {
     private toastr: ToastrService
   ) {
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
     this.minDate = today.toISOString().split('T')[0];
 
     this.formularioAltaPedido = this.fb.group({
