@@ -68,14 +68,11 @@ export class RentsComponent implements OnInit {
   }
 
   obtenerEstadosAlquiler() {
-    this.spinner.show();
     this.servicioAlquileres.ObtenerEstadosAlquiler().subscribe({
       next: (resp) => {
-        this.spinner.hide();
         this.estadosAlquiler = resp.resultado;
       },
       error: (error) => {
-        this.spinner.hide();
       }
     });
   }
