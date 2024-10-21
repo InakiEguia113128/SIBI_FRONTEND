@@ -20,19 +20,27 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let alquiler of alquileres">
-                <td>{{alquiler.socio.nombre}} {{alquiler.socio.apellido}}</td>
-                <td>{{alquiler.socio?.nroDocumento || '-' }}</td>
-                <td>{{alquiler.montoTotal | currency:'$':'symbol':'1.2-2'}}</td>
-                <td>{{alquiler.descripcion}}</td>
-                <td>{{alquiler.fechaDesde | date: 'dd/MM/yyyy'}}</td>
-                <td>{{alquiler.fechaHasta | date: 'dd/MM/yyyy'}}</td>
-                <td>
-                    <i type="button" class="fal fa-search" (click)="verAlquiler(alquiler)" tippy="Ver alquiler"></i>
-                    <i type="button" *ngIf="!esSocio" style="margin-left: 20px;" class="fal fa-exchange" (click)="cambiarEstadoModal(alquiler.idAlquiler)" tippy="Cambiar estado"></i>                                 
-                </td>
-
-            </tr>
+          <tr *ngFor="let alquiler of alquileres">
+            <td>{{alquiler.socio.nombre}} {{alquiler.socio.apellido}}</td>
+            <td>{{alquiler.socio?.nroDocumento || '-' }}</td>
+            <td>{{alquiler.montoTotal | currency:'$':'symbol':'1.2-2'}}</td>
+            <td>{{alquiler.descripcion}}</td>
+            <td>{{alquiler.fechaDesde | date: 'dd/MM/yyyy'}}</td>
+            <td>{{alquiler.fechaHasta | date: 'dd/MM/yyyy'}}</td>
+            <td>
+                <i type="button" class="fal fa-search" (click)="verAlquiler(alquiler)" tippy="Ver alquiler"></i>
+                <i type="button" 
+                   [attr.aria-disabled]="alquiler.descripcion === 'Cancelado' || alquiler.descripcion === 'Devuelto' ? 'true' : 'false'"
+                   *ngIf="!esSocio" 
+                   style="margin-left: 20px;" 
+                   class="fal fa-exchange" 
+                   (click)="(alquiler.descripcion !== 'Cancelado' && alquiler.descripcion !== 'Devuelto') ? cambiarEstadoModal(alquiler.idAlquiler) : null" 
+                   tippy="Cambiar estado" 
+                   [class.disabled]="alquiler.descripcion === 'Cancelado' || alquiler.descripcion === 'Devuelto'">
+                </i>                                 
+            </td>
+        </tr>
+        
         </tbody>
     </table>
 </div>

@@ -412,4 +412,10 @@ button{
     margin-right: 5px;
   }
 
+  .disabled {
+    color: #b0b0b0; /* Un tono gris claro */
+    pointer-events: none; /* Esto desactiva los eventos de click */
+    opacity: 0.6; /* Hacer que el ícono se vea ligeramente opaco */
+  }
+  
   
