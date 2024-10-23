@@ -1,1 +1,29 @@
-<p>statistics works!</p>
+<div class="container pad">
+  <h1>Reportes</h1>
+  <hr />
+
+  <div class="report-container2">
+    <form class="row g-3">
+      <!-- Primera fila: Fecha Desde -->
+      <div class="col-md-6">
+        <label for="fechaDesde" class="form-label">Fecha Desde</label>
+        <input type="date" class="form-control" id="fechaDesde" [(ngModel)]="fechaDesde" name="fechaDesde"/>
+      </div>
+
+      <!-- Segunda fila: Fecha Hasta -->
+      <div class="col-md-6">
+        <label for="fechaHasta" class="form-label">Fecha Hasta</label>
+        <input type="date" class="form-control" id="fechaHasta" [(ngModel)]="fechaHasta" name="fechaHasta"/>
+      </div>
+
+      <div class="col-12 text-center mt-4">
+        <button type="button" class="btn btnVerde me-2" (click)="CargarLibrosPorGenero()">Aplicar</button>
+        <button type="button" class="btn btnRojo me-2" (click)="limpiarFiltros()">Limpiar Filtros</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="report-container">
+    <canvas id="myChart"></canvas>
+  </div>
+</div>
