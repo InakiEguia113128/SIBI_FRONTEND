@@ -2,23 +2,45 @@
   <h1>Reportes</h1>
   <hr />
 
-  <div class="report-container2">
+  <div class="report-container">
     <form class="row g-3">
-      <!-- Primera fila: Fecha Desde -->
       <div class="col-md-6">
         <label for="fechaDesde" class="form-label">Fecha Desde</label>
-        <input type="date" class="form-control" id="fechaDesde" [(ngModel)]="fechaDesde" name="fechaDesde"/>
+        <input
+          type="date"
+          class="form-control"
+          id="fechaDesde"
+          [(ngModel)]="fechaDesde"
+          name="fechaDesde"
+        />
       </div>
 
-      <!-- Segunda fila: Fecha Hasta -->
       <div class="col-md-6">
         <label for="fechaHasta" class="form-label">Fecha Hasta</label>
-        <input type="date" class="form-control" id="fechaHasta" [(ngModel)]="fechaHasta" name="fechaHasta"/>
+        <input
+          type="date"
+          class="form-control"
+          id="fechaHasta"
+          [(ngModel)]="fechaHasta"
+          name="fechaHasta"
+        />
       </div>
 
       <div class="col-12 text-center mt-4">
-        <button type="button" class="btn btnVerde me-2" (click)="CargarLibrosPorGenero()">Aplicar</button>
-        <button type="button" class="btn btnRojo me-2" (click)="limpiarFiltros()">Limpiar Filtros</button>
+        <button
+          type="button"
+          class="btn btnVerde me-2"
+          (click)="CargarLibrosPorGenero()"
+        >
+          Aplicar
+        </button>
+        <button
+          type="button"
+          class="btn btnRojo me-2"
+          (click)="limpiarFiltros()"
+        >
+          Limpiar Filtros
+        </button>
       </div>
     </form>
   </div>
@@ -27,3 +49,172 @@
     <canvas id="myChart"></canvas>
   </div>
 </div>
+
+<div class="container rounded-4 pad">
+  <h1>Listado de alquileres vencidos</h1>
+  <hr />
+  <div class="row py-2 justify-content-center">
+    <div class="col-12">
+      <button class="btn btnVerde w-100" (click)="abrirFiltro()">Filtrar</button>
+    </div>
+    <br><br>
+    <div class="col-12">
+      <button class="btn btnGris w-100" (click)="exportarPDFAlquileresVencidos()">Exportar PDF</button>
+    </div>
+  </div>
+  <hr />
+  <div class="table-responsive">
+    <table class="table table-hover mtc-5">
+      <thead class="table table-hover mtc-5 table-sm">
+        <tr>
+          <th mat-sort-header="nombre" scope="col">Nombre</th>
+          <th mat-sort-header="nombre" scope="col">Nro documento</th>
+          <th mat-sort-header="subotal" scope="col">Subtotal</th>
+          <th mat-sort-header="estado" scope="col">Estado</th>
+          <th mat-sort-header="fechaDesde" scope="col">Fecha de entrega</th>
+          <th mat-sort-header="fechaHasta" scope="col">Fecha de devolución</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let alquiler of alquileres">
+          <td>{{alquiler.socio.nombre}} {{alquiler.socio.apellido}}</td>
+          <td>{{alquiler.socio?.nroDocumento || '-' }}</td>
+          <td>{{alquiler.montoTotal | currency:'$':'symbol':'1.2-2'}}</td>
+          <td>{{alquiler.descripcion}}</td>
+          <td>{{alquiler.fechaDesde | date: 'dd/MM/yyyy'}}</td>
+          <td>{{alquiler.fechaHasta | date: 'dd/MM/yyyy'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <mat-paginator 
+    [length]="length" 
+    [pageSize]="pageSize" 
+    [pageSizeOptions]="[5, 10, 25]" 
+    (page)="cambiarPagina($event)">
+  </mat-paginator>
+</div>
+
+<div class="modal" [ngClass]="{'show': mostrarFiltros, 'd-none': !mostrarFiltros}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Filtros</h5>
+        <button type="button" class="close" (click)="cerrarFiltro()">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="aplicarFiltros()">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Nombre de socio</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="filtros.nombre"
+                  name="nombre"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Apellido de socio</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="filtros.apellido"
+                  name="apellido"
+                />
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Nro de documento socio</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="filtros.nroDocumentoSocio"
+                  name="nroDocumentoSocio"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Fecha de entrega</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="filtros.fechaDesde"
+                  name="fechaDesde"
+                />
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Fecha de devolución</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  [(ngModel)]="filtros.fechaHasta"
+                  name="fechaHasta"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group"></div>
+            </div>
+          </div>
+          <br />
+          <div class="row py-2 justify-content-center">
+            <button type="submit" class="btn btnVerde w-100">Aplicar</button>
+          </div>
+          <div class="row py-2 justify-content-center">
+            <button type="button" class="btn btnAmarillo w-100" (click)="limpiarFiltrosListado()">Limpiar</button>
+          </div>          
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div *ngIf="mostrarFiltros == undefined" class="container rounded-4 pad" id="contenidoPDF">
+  <h1>Listado de alquileres vencidos</h1>
+  <hr />
+  <hr />
+  <div class="table-responsive">
+    <table class="table table-hover mtc-5">
+      <thead class="table table-hover mtc-5 table-sm">
+        <tr>
+          <th mat-sort-header="nombre" scope="col">Nombre</th>
+          <th mat-sort-header="nombre" scope="col">Nro documento</th>
+          <th mat-sort-header="subotal" scope="col">Subtotal</th>
+          <th mat-sort-header="estado" scope="col">Estado</th>
+          <th mat-sort-header="fechaDesde" scope="col">Fecha de entrega</th>
+          <th mat-sort-header="fechaHasta" scope="col">Fecha de devolución</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let alquiler of alquileres">
+          <td>{{alquiler.socio.nombre}} {{alquiler.socio.apellido}}</td>
+          <td>{{alquiler.socio?.nroDocumento || '-' }}</td>
+          <td>{{alquiler.montoTotal | currency:'$':'symbol':'1.2-2'}}</td>
+          <td>{{alquiler.descripcion}}</td>
+          <td>{{alquiler.fechaDesde | date: 'dd/MM/yyyy'}}</td>
+          <td>{{alquiler.fechaHasta | date: 'dd/MM/yyyy'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+

@@ -1,9 +1,12 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Chart, registerables, ChartOptions, ChartData } from 'chart.js';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ReporteService } from 'src/app/Services/Reportes/reporte.service';
 import Swal from 'sweetalert2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-statistics',
@@ -11,10 +14,27 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
   styleUrls: ['./statistics.component.css'],
 })
 export class StatisticsComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   librosPorGenero: any[] = [];
   myChart: Chart<'doughnut'> | undefined; 
   fechaDesde: string = ''; 
   fechaHasta: string = '';  
+  alquileres: any = [];
+  mostrarFiltros: boolean = false;
+  filtros: any = {
+    fechaDesde: null,
+    fechaHasta: null,
+    idEstadoAlquiler: null,
+    nroDocumentoSocio: null,
+    nombre: null,
+    apellido: null,
+  };
+  length = 0; 
+  pageSize = 10; 
+  pageIndex = 0; 
+  recalcularToal: boolean = false;
+  limpiarActivados : boolean = false;
 
   constructor(
     private servicioReportes: ReporteService,
@@ -29,6 +49,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
     this.fechaHasta = new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0).toISOString().substring(0, 10);
 
     this.CargarLibrosPorGenero();
+    this.obtenerAlquileresVencidos();
   }
 
   CargarLibrosPorGenero() {
@@ -175,5 +196,157 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
   
     this.fechaHasta = new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0).toISOString().substring(0, 10);
     this.CargarLibrosPorGenero();  
+  }
+
+  abrirFiltro() {
+    this.mostrarFiltros = true;
+  }
+
+  cerrarFiltro() {
+    this.mostrarFiltros = false;
+  }
+
+  obtenerAlquileresVencidos(pagina: number = this.pageIndex, cantidad: number = this.pageSize, recalcularLength:boolean = this.recalcularToal) {
+
+    this.spinner.show();
+    
+    const saltar = pagina * cantidad;
+
+    this.servicioReportes.ListadoAlquileresVencidos({
+      ...this.filtros,
+      devolver: cantidad,
+      salta: saltar 
+    }).subscribe({
+      next: (resp) => {
+        this.spinner.hide();
+        this.alquileres = resp.resultado; 
+        if(this.recalcularToal){
+          this.length = (resp.resultado && resp.resultado.length > 0) ? resp.resultado[0].total : 0;
+        }
+        this.recalcularToal = false;
+
+      },
+      error: (error) => {
+        this.spinner.hide();
+        Swal.fire('Error', 'No se pudo recuperar los alquileres', 'error');
+      }
+    });
+  }
+
+  aplicarFiltros() {
+    this.irAPaginaUno();
+    this.limpiarActivados = true;
+    this.recalcularToal = true
+    this.obtenerAlquileresVencidos();
+    this.cerrarFiltro();
+  }
+
+  irAPaginaUno() {
+    this.paginator.firstPage();
+  }
+
+  cambiarPagina(event: PageEvent) {
+    this.pageIndex = event.pageIndex; 
+    this.pageSize = event.pageSize; 
+    this.obtenerAlquileresVencidos(this.pageIndex, this.pageSize);
+  }
+
+  limpiarFiltrosListado() {
+    this.irAPaginaUno();
+    this.limpiarActivados = false;
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.recalcularToal = true;
+    this.filtros = {
+      fechaDesde: null,
+      fechaHasta: null,
+      idEstadoAlquiler: null,
+      nroDocumentoSocio: null,
+      nombre: null,
+      apellido: null,
+      devolver: this.pageSize,
+      salta: 0
+    };
+    this.obtenerAlquileresVencidos();
+    this.mostrarFiltros = false;
+  }
+
+  nombreFiltros: any = {
+    fechaDesde: 'Fecha desde',
+    fechaHasta: 'Fecha hasta',
+    idEstadoAlquiler: 'Estado del alquiler',
+    nroDocumentoSocio: 'Nro. de documento del socio',
+    nombre: 'Nombre del socio',
+    apellido: 'Apellido del socio',
+  };
+  
+  exportarPDFAlquileresVencidos() {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    
+    const title = 'Listado de alquileres vencidos';
+    const titleWidth = doc.getTextWidth(title);
+    const pageWidth = doc.internal.pageSize.getWidth();
+    doc.text(title, (pageWidth - titleWidth) / 2, 20);
+    
+    const lineY = 25; 
+    doc.setLineWidth(0.5);
+    doc.line(10, lineY, pageWidth - 10, lineY);
+  
+    const filtrosAplicados = this.generarTextoFiltros();
+    let startY = lineY + 10;
+  
+    if (filtrosAplicados.length > 0) {
+      doc.setFontSize(12);
+      doc.text('Filtros aplicados', 10, startY);
+      startY += 10; 
+  
+      filtrosAplicados.forEach((filtro, index) => {
+        doc.text(filtro, 10, startY + (index * 4)); 
+        startY += 4; 
+      });
+  
+      startY += 5; 
+    }
+  
+    const data = this.alquileres.map((alquiler: { socio: { nombre: any; apellido: any; nroDocumento: any; }; montoTotal: { toLocaleString: (arg0: string, arg1: { style: string; currency: string; }) => any; }; descripcion: any; fechaDesde: string | number | Date; fechaHasta: string | number | Date; }) => ({
+      nombre: `${alquiler.socio.nombre} ${alquiler.socio.apellido}`,
+      nroDocumento: alquiler.socio?.nroDocumento || '-',
+      subtotal: alquiler.montoTotal.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }),
+      estado: alquiler.descripcion,
+      fechaEntrega: new Date(alquiler.fechaDesde).toLocaleDateString('es-AR'),
+      fechaDevolucion: new Date(alquiler.fechaHasta).toLocaleDateString('es-AR'),
+    }));
+  
+    const columns = [
+      { header: 'Nombre', dataKey: 'nombre' },
+      { header: 'Nro documento', dataKey: 'nroDocumento' },
+      { header: 'Subtotal', dataKey: 'subtotal' },
+      { header: 'Estado', dataKey: 'estado' },
+      { header: 'Fecha de entrega', dataKey: 'fechaEntrega' },
+      { header: 'Fecha de devolución', dataKey: 'fechaDevolucion' },
+    ];
+  
+    autoTable(doc, {
+      head: [columns.map(col => col.header)],
+      body: data.map((item: { [x: string]: any; }) => columns.map(col => item[col.dataKey])),
+      startY: startY,
+    });
+  
+    doc.save('listado_alquileres_vencidos.pdf');
+  }
+  
+  
+  generarTextoFiltros() {
+    const filtrosTexto: string[] = [];
+    
+    for (const [key, value] of Object.entries(this.filtros)) {
+      if (value) {
+        const filtroNombre = this.nombreFiltros[key] || key;
+        filtrosTexto.push(`${filtroNombre}: ${value}`);
+      }
+    }
+  
+    return filtrosTexto;
   }
 }

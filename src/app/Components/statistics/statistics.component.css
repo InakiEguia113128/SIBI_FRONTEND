@@ -432,4 +432,141 @@ canvas {
   }
 
   
+.modal-content {
+    background-color: #fff;
+    border-radius: var(--bs-border-radius-xl) !important;
+}
+
+/*Validations*/
+
+input.ng-touched.ng-dirty.ng-invalid {
+    border-color: tomato;
+    border-style: solid;
+    border-width: 2px;
+}
+
+select.ng-touched.ng-dirty.ng-invalid {
+    border-color: tomato;
+    border-style: solid;
+    border-width: 2px;
+}
+
+input.ng-valid {
+    border-color: rgb(94, 163, 66);
+    border-style: solid;
+    border-width: 2px;
+}
+
+select.ng-valid {
+    border-color: rgb(94, 163, 66);
+    border-style: solid;
+    border-width: 2px;
+}
+
+small {
+    color: tomato;
+}
+
+.gris {
+    color: #d6d8d9;
+}
+
+.bg-gris {
+    background-color: #8a8e93;
+}
+
+.radioAzul {
+    border-color: #ebeced;
+    border-style: solid;
+}
+
+.icono {
+    color: #2c5672;
+    font-size: 26px;
+}
+
+.icono:hover {
+    color: #3e789f;
+}
+
+.iconoRed {
+    color: #bf4a4a;
+    font-size: 26px;
+}
+
+.iconoRed:hover {
+    color: #c25b5b;
+}
+
+.inputColor {
+    border-color: #2c5672 !important;
+
+}
+
+.letra {
+    color: #242222;
+}
+
+.letra:hover {
+    color: #2c5672;   
+}
+
+.letraRoja{
+    color:#dc3545;
+}
+.letraRoja:hover{
+    color:#c3525e;
+}
+
+.iconoGreen{
+    color:#4d9e50;
+    font-size: 26px;
+}
+
+
+.card-img-top {
+    width: 100%;
+    height: auto;
+  }
+  
+  .pagination {
+    margin-top: 20px;
+  }
+  
+  .modal {
+    position: fixed;
+    z-index: 1050;
+  }
+
+  .modal {
+    display: none;
+  }
+  .modal.show {
+    display: block;
+  }
+  
+
+  .btnAmarillo {
+    background: #404227;
+    color: #FAF8F2;
+    border-color: #FAF8F2;
+    overflow: hidden;
+    transition: all 500ms ease;
+    z-index: 0;
+}
+
+.modal-header {
+    position: relative;
+}
+
+.btn-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #000;
+}
+
   
