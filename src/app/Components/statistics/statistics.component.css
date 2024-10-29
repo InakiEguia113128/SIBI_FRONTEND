@@ -569,4 +569,30 @@ small {
     color: #000;
 }
 
+
+.report-container2 {
+    width: 100%; /* Ocupa todo el ancho del contenedor padre */
+    max-width: 800px; /* Máximo ancho para el contenedor */
+    margin: 0 auto; /* Centra el contenedor */
+    background-color: #ffffff; 
+    padding: 20px; 
+    border-radius: 10px; 
+    width: 100%; 
+    margin: 20px 0; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    box-sizing: border-box; 
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.3s; 
+  }
+  
+  #sociosActivosChart {
+    width: 100%; /* Hace que el canvas sea responsivo */
+    height: 500px; /* Mantiene la relación de aspecto */
+  }
+  
+  .report-container2:hover {
+    transform: scale(1.02); 
+}
   

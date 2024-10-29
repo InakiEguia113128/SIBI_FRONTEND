@@ -24,4 +24,12 @@ export class ReporteService {
   ListadoAlquileresVencidos(filtros:any) : Observable<any>{
     return this.http.put(this.urlbase + "Reportes/alquileres-vencidos", filtros, { headers : this.headers });
   }
+
+  SociosActivosPorMes(filtros:any) : Observable<any>{
+    return this.http.put(this.urlbase + "Reportes/socios-activos", filtros, { headers : this.headers });
+  }
+
+  LibrosMasAlquilados(filtros:any) : Observable<any>{
+    return this.http.put(this.urlbase + "Reportes/libros-relevantes", filtros, { headers : this.headers });
+  }
 }

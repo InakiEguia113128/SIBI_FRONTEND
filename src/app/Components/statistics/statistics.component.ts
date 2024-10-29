@@ -7,6 +7,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { UserService } from 'src/app/Services/Users/user.service';
 
 @Component({
   selector: 'app-statistics',
@@ -16,8 +17,14 @@ import autoTable from 'jspdf-autotable';
 export class StatisticsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  esEmpleado = false;
+  rolesUsuario: any = [];
   librosPorGenero: any[] = [];
-  myChart: Chart<'doughnut'> | undefined; 
+  sociosActivos: any[] = [];
+  fechaDesdeSociosActivos: string = ''; 
+  fechaHastaSociosActivos: string = '';  
+  librosGeneroChart: Chart<'doughnut'> | undefined; 
+  sociosActivosChart: Chart<'polarArea'>  | undefined;
   fechaDesde: string = ''; 
   fechaHasta: string = '';  
   alquileres: any = [];
@@ -38,7 +45,8 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private servicioReportes: ReporteService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private servicioUsuario: UserService
   ) {}
 
   ngOnInit(): void {
@@ -48,8 +56,22 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
   
     this.fechaHasta = new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0).toISOString().substring(0, 10);
 
-    this.CargarLibrosPorGenero();
-    this.obtenerAlquileresVencidos();
+    const tresMesesAtras = new Date(fechaActual.setMonth(fechaActual.getMonth() - 5));
+
+    this.fechaHastaSociosActivos = new Date().toISOString().split('T')[0];
+
+    this.fechaDesdeSociosActivos = tresMesesAtras.toISOString().split('T')[0]; 
+
+    this.rolesUsuario = this.servicioUsuario.obtenerRolesUsuarioActivo();
+
+    this.esEmpleado = !this.rolesUsuario.roles.includes("Administrador");
+    debugger
+    if(this.esEmpleado === true){
+      this.obtenerAlquileresVencidos();
+      this.CargarSociosActivos();
+    }else{
+      this.CargarLibrosPorGenero();
+    }
   }
 
   CargarLibrosPorGenero() {
@@ -81,7 +103,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
   }
 
   dibujarGraficoLibrosPorGenero() {
-    const canvas = document.getElementById('myChart') as HTMLCanvasElement;
+    const canvas = document.getElementById('librosGeneroChart') as HTMLCanvasElement;
     if (canvas) {
       const ctx = canvas.getContext('2d');
       if (ctx) {
@@ -91,8 +113,8 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
         const dpr = window.devicePixelRatio || 1;
         ctx.scale(dpr, dpr);
 
-        if (this.myChart) {
-          this.myChart.destroy();
+        if (this.librosGeneroChart) {
+          this.librosGeneroChart.destroy();
         }
 
         const labels = this.librosPorGenero.map((item) => item.genero);
@@ -158,7 +180,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
           },
         };
 
-        this.myChart = new Chart(ctx, {
+        this.librosGeneroChart = new Chart(ctx, {
           type: 'doughnut',
           data: chartData,
           options: chartOptions,
@@ -348,5 +370,156 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
     }
   
     return filtrosTexto;
+  }
+
+    dibujarGraficoSociosActivosPorMes() {
+      const canvas = document.getElementById('sociosActivosChart') as HTMLCanvasElement;
+
+      if (canvas) {
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+              canvas.width = 400;
+              canvas.height = 400;
+
+              const dpr = window.devicePixelRatio || 1;
+              ctx.scale(dpr, dpr);
+
+              if (this.sociosActivosChart) {
+                  this.sociosActivosChart.destroy();
+              }
+
+              const labels = this.sociosActivos.map((item) => `${item.mes} ${item.año}`);
+              const data = this.sociosActivos.map((item) => item.cantidadSociosActivos);
+
+              const backgroundColors = this.generarColores2(labels.length);
+
+              const chartData: ChartData<'polarArea', number[], unknown> = {
+                  labels: labels,
+                  datasets: [
+                      {
+                          label: 'Cantidad de socios activos por mes',
+                          data: data,
+                          backgroundColor: backgroundColors,
+                          borderColor: 'rgba(255, 255, 255, 1)',
+                          borderWidth: 4,
+                          hoverOffset: 10,
+                      },
+                  ],
+              };
+
+              const chartOptions: ChartOptions<'polarArea'> = {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                      r: {
+                          beginAtZero: true,
+                          ticks: {
+                              callback: function(tickValue) {
+                                  return typeof tickValue === 'number' ? tickValue : ''; 
+                              },
+                          },
+                      },
+                  },
+                  plugins: {
+                      title: {
+                          display: true,
+                          text: 'Cantidad de socios activos por mes',
+                          font: {
+                              size: 18,
+                              weight: 'bold',
+                          },
+                      },
+                      tooltip: {
+                          callbacks: {
+                              label: (tooltipItem) => {
+                                  const label = tooltipItem.label || '';
+                                  const value = tooltipItem.raw as number; 
+                                  return `${label}: ${Math.round(value)}`;
+                              },
+                          },
+                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                          titleColor: 'rgba(0, 0, 0, 0.7)',
+                          bodyColor: 'rgba(0, 0, 0, 0.8)',
+                      },
+                      datalabels: {
+                          anchor: 'end',
+                          align: 'end',
+                          color: 'rgba(0, 0, 0, 0.9)',
+                          font: {
+                              size: 14,
+                              weight: 'bold',
+                          },
+                          formatter: (value: number, context) => {
+                              const labels = context.chart.data.labels;
+                              return labels ? `${labels[context.dataIndex]}: ${Math.round(value)}` : value;
+                          },
+                      },
+                  },
+              };
+
+              this.sociosActivosChart = new Chart(ctx, {
+                  type: 'polarArea',
+                  data: chartData,
+                  options: chartOptions,
+              });
+          } else {
+              console.error('No se pudo obtener el contexto 2D del canvas.');
+          }
+      } else {
+          console.error('No se pudo encontrar el elemento canvas con el id "sociosActivosChart".');
+      }
+  }
+
+    CargarSociosActivos() {
+      this.spinner.show();
+    
+      const payload = {
+        fechaDesde: this.fechaDesdeSociosActivos ? this.fechaDesdeSociosActivos : undefined,
+        fechaHasta: this.fechaHastaSociosActivos ? this.fechaHastaSociosActivos : undefined
+      };
+      
+      this.servicioReportes.SociosActivosPorMes(payload).subscribe({
+        next: (resp) => {
+          this.spinner.hide();
+          this.sociosActivos = resp.resultado;
+          this.dibujarGraficoSociosActivosPorMes();
+        },
+        error: (error) => {
+          this.spinner.hide();
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.error.error,
+          });
+        },
+      });
+    } 
+    
+    generarColores2(cantidad: number): string[] {
+      const colores: string[] = [];
+      for (let i = 0; i < cantidad; i++) {
+          colores.push(this.generarColorCalido(0.5));
+      }
+      return colores;
+  }
+
+  generarColorCalido(opacidad: number): string {
+      const r = Math.floor(Math.random() * 156 + 100); // Rojo fuerte
+      const g = Math.floor(Math.random() * 156); // Verde entre 0 y 155
+      const b = Math.floor(Math.random() * 56); // Azul bajo para mantenerlo cálido
+      return `rgba(${r}, ${g}, ${b}, ${opacidad})`;
+  }
+
+
+  limpiarSociosActivos(){
+    const fechaActual = new Date();
+    
+    const tresMesesAtras = new Date(fechaActual.setMonth(fechaActual.getMonth() - 5));
+
+    this.fechaHastaSociosActivos = new Date().toISOString().split('T')[0];
+
+    this.fechaDesdeSociosActivos = tresMesesAtras.toISOString().split('T')[0]; 
+
+    this.CargarSociosActivos();
   }
 }

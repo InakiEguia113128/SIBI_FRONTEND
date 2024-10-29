@@ -2,7 +2,7 @@
   <h1>Reportes</h1>
   <hr />
 
-  <div class="report-container">
+  <div *ngIf="!esEmpleado"  class="report-container">
     <form class="row g-3">
       <div class="col-md-6">
         <label for="fechaDesde" class="form-label">Fecha Desde</label>
@@ -39,18 +39,68 @@
           class="btn btnRojo me-2"
           (click)="limpiarFiltros()"
         >
-          Limpiar Filtros
+          Reestablecer
         </button>
       </div>
     </form>
   </div>
 
-  <div class="report-container">
-    <canvas id="myChart"></canvas>
+  <div *ngIf="!esEmpleado" class="report-container">
+    <canvas id="librosGeneroChart"></canvas>
   </div>
 </div>
 
-<div class="container rounded-4 pad">
+<div *ngIf="esEmpleado" class="container pad">
+  <div class="report-container">
+    <form class="row g-3">
+      <div class="col-md-6">
+        <label for="fechaDesdeSociosActivos" class="form-label">Fecha Desde</label>
+        <input
+          type="date"
+          class="form-control"
+          id="fechaDesdeSociosActivos"
+          [(ngModel)]="fechaDesdeSociosActivos"
+          name="fechaDesdeSociosActivos"
+        />
+      </div>
+  
+      <div class="col-md-6">
+        <label for="fechaHastaSociosActivos" class="form-label">Fecha Hasta</label>
+        <input
+          type="date"
+          class="form-control"
+          id="fechaHastaSociosActivos"
+          [(ngModel)]="fechaHastaSociosActivos"
+          name="fechaHastaSociosActivos"
+        />
+      </div>
+  
+      <div class="col-12 text-center mt-4">
+        <button
+          type="button"
+          class="btn btnVerde me-2"
+          (click)="CargarSociosActivos()"
+        >
+          Aplicar
+        </button>
+        <button
+          type="button"
+          class="btn btnRojo me-2"
+          (click)="limpiarSociosActivos()"
+        >
+          Reestablecer
+        </button>
+      </div>
+    </form>
+  </div>
+  
+  <div *ngIf="esEmpleado"  class="report-container">
+    <canvas id="sociosActivosChart" ></canvas>
+  </div>
+  </div>
+  
+
+<div *ngIf="esEmpleado"  class="container rounded-4 pad">
   <h1>Listado de alquileres vencidos</h1>
   <hr />
   <div class="row py-2 justify-content-center">
@@ -187,8 +237,9 @@
 
 
 
-<div *ngIf="mostrarFiltros == undefined" class="container rounded-4 pad" id="contenidoPDF">
-  <h1>Listado de alquileres vencidos</h1>
+<!-- <div *ngIf="mostrarFiltros == undefined" class="container rounded-4 pad" id="contenidoPDF">
+  <div class="container rounded-4 pad" id="contenidoPDF">
+  <h1>Listado de alquileres vencidodasas</h1>
   <hr />
   <hr />
   <div class="table-responsive">
@@ -215,6 +266,4 @@
       </tbody>
     </table>
   </div>
-</div>
-
-
+</div> -->
