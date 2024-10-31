@@ -8,6 +8,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { UserService } from 'src/app/Services/Users/user.service';
+import { LibrosService } from 'src/app/Services/Libros/libros.service';
 
 @Component({
   selector: 'app-statistics',
@@ -17,7 +18,26 @@ import { UserService } from 'src/app/Services/Users/user.service';
 export class StatisticsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  esEmpleado = false;
+  recalcularTotalLibro = false;
+  mostrarFiltrosLibro = false;
+  librosRelevantes : any = [];
+  librosRelevantesPDF : any = [];
+  filtrosLibrosRelevantes: any = {
+    titulo: null,
+    autor: null,
+    editorial: null,
+    fechaPublicacionDesde: null,
+    fechaPublicacionHasta: null,
+    idGenero: null,
+    nGenero: null,
+    devolver: 10,
+    salta:0
+  };
+  lengthLibros = 0; 
+  pageSizeLibros = 10; 
+  pageIndexLibros = 0; 
+  generos: any = [];
+  esEmpleado : boolean = false;
   rolesUsuario: any = [];
   librosPorGenero: any[] = [];
   sociosActivos: any[] = [];
@@ -28,6 +48,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
   fechaDesde: string = ''; 
   fechaHasta: string = '';  
   alquileres: any = [];
+  alquileresPDF: any = [];
   mostrarFiltros: boolean = false;
   filtros: any = {
     fechaDesde: null,
@@ -35,7 +56,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
     idEstadoAlquiler: null,
     nroDocumentoSocio: null,
     nombre: null,
-    apellido: null,
+    apellido: null
   };
   length = 0; 
   pageSize = 10; 
@@ -46,6 +67,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
   constructor(
     private servicioReportes: ReporteService,
     private spinner: NgxSpinnerService,
+    private servicioLibros: LibrosService,
     private servicioUsuario: UserService
   ) {}
 
@@ -65,12 +87,20 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
     this.rolesUsuario = this.servicioUsuario.obtenerRolesUsuarioActivo();
 
     this.esEmpleado = !this.rolesUsuario.roles.includes("Administrador");
-    debugger
+
+    this.servicioLibros.GetGeneros().subscribe({
+      next: (resp) => {
+        this.generos = resp.resultado;
+      },
+      error: (error) => {}
+    });
+
     if(this.esEmpleado === true){
       this.obtenerAlquileresVencidos();
       this.CargarSociosActivos();
     }else{
       this.CargarLibrosPorGenero();
+      this.CargarLibrosRelevantes();
     }
   }
 
@@ -241,10 +271,13 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
     }).subscribe({
       next: (resp) => {
         this.spinner.hide();
-        this.alquileres = resp.resultado; 
-        if(this.recalcularToal){
-          this.length = (resp.resultado && resp.resultado.length > 0) ? resp.resultado[0].total : 0;
-        }
+        this.alquileres = resp.resultado.resultado; 
+        this.alquileresPDF = resp.resultado.resultadoPDF; 
+          if(this.recalcularToal){
+            this.length = resp.resultado.resultado[0].total;
+          }else{
+            this.length = resp.resultado.resultado[0].total;
+          }
         this.recalcularToal = false;
 
       },
@@ -305,58 +338,58 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
   exportarPDFAlquileresVencidos() {
     const doc = new jsPDF();
     doc.setFontSize(18);
-    
+
     const title = 'Listado de alquileres vencidos';
     const titleWidth = doc.getTextWidth(title);
     const pageWidth = doc.internal.pageSize.getWidth();
     doc.text(title, (pageWidth - titleWidth) / 2, 20);
-    
+
     const lineY = 25; 
     doc.setLineWidth(0.5);
     doc.line(10, lineY, pageWidth - 10, lineY);
-  
+
     const filtrosAplicados = this.generarTextoFiltros();
-    let startY = lineY + 10;
-  
+    let startY = lineY + 10; 
+
     if (filtrosAplicados.length > 0) {
-      doc.setFontSize(12);
-      doc.text('Filtros aplicados', 10, startY);
-      startY += 10; 
-  
-      filtrosAplicados.forEach((filtro, index) => {
-        doc.text(filtro, 10, startY + (index * 4)); 
-        startY += 4; 
-      });
-  
-      startY += 5; 
+        doc.setFontSize(12);
+        doc.text('Filtros aplicados', 10, startY);
+        startY += 10; 
+
+        filtrosAplicados.forEach((filtro, index) => {
+            doc.text(filtro, 10, startY + (index * 6)); 
+        });
+
+        startY += filtrosAplicados.length * 6; 
+        startY += 5; 
     }
-  
-    const data = this.alquileres.map((alquiler: { socio: { nombre: any; apellido: any; nroDocumento: any; }; montoTotal: { toLocaleString: (arg0: string, arg1: { style: string; currency: string; }) => any; }; descripcion: any; fechaDesde: string | number | Date; fechaHasta: string | number | Date; }) => ({
-      nombre: `${alquiler.socio.nombre} ${alquiler.socio.apellido}`,
-      nroDocumento: alquiler.socio?.nroDocumento || '-',
-      subtotal: alquiler.montoTotal.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }),
-      estado: alquiler.descripcion,
-      fechaEntrega: new Date(alquiler.fechaDesde).toLocaleDateString('es-AR'),
-      fechaDevolucion: new Date(alquiler.fechaHasta).toLocaleDateString('es-AR'),
+
+    const data = this.alquileresPDF.map((alquiler: { socio: { nombre: any; apellido: any; nroDocumento: any; }; montoTotal: { toLocaleString: (arg0: string, arg1: { style: string; currency: string; }) => any; }; descripcion: any; fechaDesde: string | number | Date; fechaHasta: string | number | Date; }) => ({
+        nombre: `${alquiler.socio.nombre} ${alquiler.socio.apellido}`,
+        nroDocumento: alquiler.socio?.nroDocumento || '-',
+        subtotal: alquiler.montoTotal.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }),
+        estado: alquiler.descripcion,
+        fechaEntrega: new Date(alquiler.fechaDesde).toLocaleDateString('es-AR'),
+        fechaDevolucion: new Date(alquiler.fechaHasta).toLocaleDateString('es-AR'),
     }));
-  
+
     const columns = [
-      { header: 'Nombre', dataKey: 'nombre' },
-      { header: 'Nro documento', dataKey: 'nroDocumento' },
-      { header: 'Subtotal', dataKey: 'subtotal' },
-      { header: 'Estado', dataKey: 'estado' },
-      { header: 'Fecha de entrega', dataKey: 'fechaEntrega' },
-      { header: 'Fecha de devolución', dataKey: 'fechaDevolucion' },
+        { header: 'Nombre', dataKey: 'nombre' },
+        { header: 'Nro documento', dataKey: 'nroDocumento' },
+        { header: 'Subtotal', dataKey: 'subtotal' },
+        { header: 'Estado', dataKey: 'estado' },
+        { header: 'Fecha de entrega', dataKey: 'fechaEntrega' },
+        { header: 'Fecha de devolución', dataKey: 'fechaDevolucion' },
     ];
-  
+
     autoTable(doc, {
-      head: [columns.map(col => col.header)],
-      body: data.map((item: { [x: string]: any; }) => columns.map(col => item[col.dataKey])),
-      startY: startY,
+        head: [columns.map(col => col.header)],
+        body: data.map((item: { [x: string]: any; }) => columns.map(col => item[col.dataKey])),
+        startY: startY, 
     });
-  
+
     doc.save('listado_alquileres_vencidos.pdf');
-  }
+}
   
   
   generarTextoFiltros() {
@@ -504,9 +537,9 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
   }
 
   generarColorCalido(opacidad: number): string {
-      const r = Math.floor(Math.random() * 156 + 100); // Rojo fuerte
-      const g = Math.floor(Math.random() * 156); // Verde entre 0 y 155
-      const b = Math.floor(Math.random() * 56); // Azul bajo para mantenerlo cálido
+      const r = Math.floor(Math.random() * 156 + 100); 
+      const g = Math.floor(Math.random() * 156); 
+      const b = Math.floor(Math.random() * 56);
       return `rgba(${r}, ${g}, ${b}, ${opacidad})`;
   }
 
@@ -521,5 +554,173 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
     this.fechaDesdeSociosActivos = tresMesesAtras.toISOString().split('T')[0]; 
 
     this.CargarSociosActivos();
+  }
+
+
+  CargarLibrosRelevantes(pagina: number = this.pageIndexLibros, cantidad: number = this.pageSizeLibros, recalcularLength:boolean = this.recalcularTotalLibro){
+      this.spinner.show();
+  
+      const saltar = pagina * cantidad;
+      this.filtrosLibrosRelevantes.devolver = cantidad;
+      this.filtrosLibrosRelevantes.salta = saltar;
+
+      this.servicioReportes.LibrosMasAlquilados({ ...this.filtrosLibrosRelevantes}).subscribe({
+        next: (resp) => {
+          this.spinner.hide();
+          this.librosRelevantes = resp.resultado.resultado;
+          this.librosRelevantesPDF = resp.resultado.resultadoPDF;
+
+          if(this.recalcularTotalLibro){
+            this.lengthLibros = resp.resultado.resultado[0].count;
+          }else{
+            this.lengthLibros = resp.resultado.resultado[0].count;
+          }
+
+          this.recalcularTotalLibro = false;
+        },
+        error: (error) => {
+          this.spinner.hide();
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.error.error,
+          });
+        },
+      });
+  }
+
+  abrirFiltroLibros() {
+    this.mostrarFiltrosLibro = true;
+  }
+
+  cerrarFiltroLibros() {
+    this.mostrarFiltrosLibro = false;
+  }
+
+  limpiarFiltrosLibros() {
+    this.filtrosLibrosRelevantes = {
+      titulo: null,
+      autor: null,
+      editorial: null,
+      fechaPublicacionDesde: null,
+      fechaPublicacionHasta: null,
+      idGenero: null,
+      nGenero: null,
+      precioDesde: null,
+      precioHasta: null,
+    };
+    this.recalcularTotalLibro = true; 
+    this.CargarLibrosRelevantes();
+    this.cerrarFiltroLibros();
+  }
+
+  aplicarFiltrosLibros(){
+    this.recalcularTotalLibro = true; 
+    this.CargarLibrosRelevantes();
+    this.cerrarFiltroLibros();
+  }
+
+  getGeneroDescripcion(libro: any): string {
+    if (libro.genero === 'Otro') {
+      return libro.otroGenero || 'Sin especificar';
+    }
+    
+    return libro.genero;
+  }
+
+  cambiarPaginaLibros(event: PageEvent) {
+    this.pageIndexLibros = event.pageIndex; 
+    this.pageSizeLibros = event.pageSize; 
+    this.CargarLibrosRelevantes(this.pageIndexLibros, this.pageSizeLibros);
+  }
+
+  exportarPDFLibrosRelevantes() {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+
+    const title = 'Listado de libros relevantes';
+    const titleWidth = doc.getTextWidth(title);
+    const pageWidth = doc.internal.pageSize.getWidth();
+    doc.text(title, (pageWidth - titleWidth) / 2, 20);
+
+    const lineY = 25; 
+    doc.setLineWidth(0.5);
+    doc.line(10, lineY, pageWidth - 10, lineY);
+
+    const filtrosAplicados = this.generarTextoFiltrosLibros();
+    let startY = lineY + 10; 
+
+    if (filtrosAplicados.length > 0) {
+        doc.setFontSize(12); 
+        doc.text('Filtros aplicados', 10, startY);
+        startY += 10;
+
+        filtrosAplicados.forEach((filtro, index) => {
+            doc.text(filtro, 10, startY + (index * 6)); 
+        });
+
+        startY += filtrosAplicados.length * 6; 
+        startY += 5; 
+    }
+
+    const data = this.librosRelevantesPDF.map((libro: { titulo: any; nombreAutor: any; editorial: any; cantidadAlquilados: any; cantidadEjemplares: any; fechaPublicacion: string | number | Date; }) => ({
+        titulo: libro.titulo,
+        nombreAutor: libro.nombreAutor,
+        genero: this.getGeneroDescripcion(libro),
+        editorial: libro.editorial,
+        cantidadAlquilados: libro.cantidadAlquilados,
+        cantidadEjemplares: libro.cantidadEjemplares,
+        fechaPublicacion: new Date(libro.fechaPublicacion).toLocaleDateString('es-AR'),
+    }));
+
+    const columns = [
+        { header: 'Título', dataKey: 'titulo' },
+        { header: 'Autor', dataKey: 'nombreAutor' },
+        { header: 'Género', dataKey: 'genero' },
+        { header: 'Editorial', dataKey: 'editorial' },
+        { header: 'Cantidad alquilados', dataKey: 'cantidadAlquilados' },
+        { header: 'Cantidad disponibles', dataKey: 'cantidadEjemplares' },
+        { header: 'Fecha de publicación', dataKey: 'fechaPublicacion' },
+    ];
+
+    autoTable(doc, {
+        head: [columns.map(col => col.header)],
+        body: data.map((item: { [x: string]: any; }) => columns.map(col => item[col.dataKey])),
+        startY: startY, 
+        margin: { top: 10 },
+        theme: 'striped',
+    });
+
+    doc.save('listado_libros_relevantes.pdf');
+}
+
+
+  generarTextoFiltrosLibros() {
+      const filtrosTexto: string[] = [];
+
+      if (this.filtrosLibrosRelevantes.titulo) {
+          filtrosTexto.push(`Título: ${this.filtrosLibrosRelevantes.titulo}`);
+      }
+      if (this.filtrosLibrosRelevantes.autor) {
+          filtrosTexto.push(`Autor: ${this.filtrosLibrosRelevantes.autor}`);
+      }
+      if (this.filtrosLibrosRelevantes.editorial) {
+          filtrosTexto.push(`Editorial: ${this.filtrosLibrosRelevantes.editorial}`);
+      }
+      if (this.filtrosLibrosRelevantes.fechaPublicacionDesde) {
+          filtrosTexto.push(`Fecha de Publicación Desde: ${new Date(this.filtrosLibrosRelevantes.fechaPublicacionDesde).toLocaleDateString('es-AR')}`);
+      }
+      if (this.filtrosLibrosRelevantes.fechaPublicacionHasta) {
+          filtrosTexto.push(`Fecha de Publicación Hasta: ${new Date(this.filtrosLibrosRelevantes.fechaPublicacionHasta).toLocaleDateString('es-AR')}`);
+      }
+      if (this.filtrosLibrosRelevantes.nGenero) {
+          filtrosTexto.push(`Género: ${this.filtrosLibrosRelevantes.nGenero}`);
+      }
+      if (this.filtrosLibrosRelevantes.idGenero) {
+        const genero = this.generos.find((g: { idGenero: any; }) => g.idGenero === this.filtrosLibrosRelevantes.idGenero);
+        filtrosTexto.push(`Género: ${genero.descripcion}`);
+    }
+
+      return filtrosTexto;
   }
 }

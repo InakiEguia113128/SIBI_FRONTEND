@@ -98,8 +98,130 @@
     <canvas id="sociosActivosChart" ></canvas>
   </div>
   </div>
-  
 
+  <div *ngIf="!esEmpleado"  class="container rounded-4 pad" style="padding-bottom: 2rem; border-bottom: 2px solid #ccc;">
+    <h1>Listado de libros alquilados</h1>
+    <hr />
+    <div class="row py-2 justify-content-center">
+      <div class="col-12">
+        <button class="btn btnVerde w-100" (click)="abrirFiltroLibros()">Filtrar</button>
+      </div>
+      <br><br>
+      <div class="col-12">
+        <button class="btn btnGris w-100" (click)="exportarPDFLibrosRelevantes()">Exportar PDF</button>
+      </div>
+    </div>
+    <hr />
+    <div class="table-responsive">
+      <table class="table table-hover mtc-5">
+        <thead class="table table-hover mtc-5 table-sm">
+          <tr>
+            <th mat-sort-header="nombre" scope="col">Titulo</th>
+            <th mat-sort-header="nombre" scope="col">Autor</th>
+            <th mat-sort-header="subotal" scope="col">Genero</th>
+            <th mat-sort-header="estado" scope="col">Editorial</th>
+            <th mat-sort-header="fechaDesde" scope="col">Cantidad alquilados</th>
+            <th mat-sort-header="fechaHasta" scope="col">Cantidad disponibles</th>
+            <th mat-sort-header="fechaHasta" scope="col">Fecha de publicacion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let libro of librosRelevantes">
+            <td>{{libro.titulo}}</td>
+            <td>{{libro.nombreAutor}}</td>
+            <td>{{getGeneroDescripcion(libro)}}</td>
+            <td>{{ libro.editorial}}</td>
+            <td>{{libro.cantidadAlquilados}}</td>
+            <td>{{libro.cantidadEjemplares}}</td>
+            <td>{{libro.fechaPublicacion| date: 'dd/MM/yyyy'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <mat-paginator 
+      [length]="lengthLibros" 
+      [pageSize]="pageSizeLibros" 
+      [pageSizeOptions]="[5, 10, 25]" 
+      (page)="cambiarPaginaLibros($event)">
+    </mat-paginator>
+  </div>
+  
+  <div class="modal" [ngClass]="{'show': mostrarFiltrosLibro, 'd-none': !mostrarFiltrosLibro}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Filtros</h5>
+          <button type="button" class="close" (click)="cerrarFiltroLibros()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="aplicarFiltrosLibros()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Título</label>
+                  <input type="text" class="form-control" [(ngModel)]="filtrosLibrosRelevantes.titulo" name="titulo">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Autor</label>
+                  <input type="text" class="form-control" [(ngModel)]="filtrosLibrosRelevantes.autor" name="autor">
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Editorial</label>
+                  <input type="text" class="form-control" [(ngModel)]="filtrosLibrosRelevantes.editorial" name="editorial">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Fecha de Publicación Desde</label>
+                  <input type="date" class="form-control" [(ngModel)]="filtrosLibrosRelevantes.fechaPublicacionDesde" name="fechaPublicacionDesde">
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Fecha de Publicación Hasta</label>
+                  <input type="date" class="form-control" [(ngModel)]="filtrosLibrosRelevantes.fechaPublicacionHasta" name="fechaPublicacionHasta">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Género</label>
+                  <select class="form-control" [(ngModel)]="filtrosLibrosRelevantes.idGenero" name="idGenero">
+                    <option *ngFor="let genero of generos" [value]="genero.idGenero">{{ genero.descripcion }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Género (Otro)</label>
+                  <input type="text" class="form-control" [(ngModel)]="filtrosLibrosRelevantes.nGenero" name="nGenero">
+                </div>
+              </div>
+            </div>
+            <div class="row py-2 justify-content-center">
+              <button type="submit" class="btn btnVerde">Aplicar</button>
+            </div>
+            <div class="row py-2 justify-content-center">
+              <button type="button" class="btn btnAmarillo" (click)="limpiarFiltrosLibros()">Limpiar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 <div *ngIf="esEmpleado"  class="container rounded-4 pad">
   <h1>Listado de alquileres vencidos</h1>
   <hr />
@@ -235,8 +357,7 @@
   </div>
 </div>
 
-
-
+<div class="footer-space"></div>
 <!-- <div *ngIf="mostrarFiltros == undefined" class="container rounded-4 pad" id="contenidoPDF">
   <div class="container rounded-4 pad" id="contenidoPDF">
   <h1>Listado de alquileres vencidodasas</h1>

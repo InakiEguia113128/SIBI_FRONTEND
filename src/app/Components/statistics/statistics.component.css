@@ -595,4 +595,8 @@ small {
   .report-container2:hover {
     transform: scale(1.02); 
 }
+
+.footer-space {
+    height: 3rem; /* Ajusta el tamaño del espacio según lo que necesites */
+  }
   
