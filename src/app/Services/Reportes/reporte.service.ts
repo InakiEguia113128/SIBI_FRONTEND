@@ -32,4 +32,8 @@ export class ReporteService {
   LibrosMasAlquilados(filtros:any) : Observable<any>{
     return this.http.put(this.urlbase + "Reportes/libros-relevantes", filtros, { headers : this.headers });
   }
+
+  IngresosMensual(filtros:any) : Observable<any>{
+    return this.http.put(this.urlbase + "Reportes/ingresos-mensuales", filtros, { headers : this.headers });
+  }
 }

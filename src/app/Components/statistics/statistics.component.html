@@ -5,6 +5,53 @@
   <div *ngIf="!esEmpleado"  class="report-container">
     <form class="row g-3">
       <div class="col-md-6">
+        <label for="fechaDesdeIngresos" class="form-label">Fecha Desde</label>
+        <input
+          type="date"
+          class="form-control"
+          id="fechaDesdeIngresos"
+          [(ngModel)]="fechaDesdeIngresos"
+          name="fechaDesdeIngresos"
+        />
+      </div>
+
+      <div class="col-md-6">
+        <label for="fechaHastaIngresos" class="form-label">Fecha Hasta</label>
+        <input
+          type="date"
+          class="form-control"
+          id="fechaHastaIngresos"
+          [(ngModel)]="fechaHastaIngresos"
+          name="fechaHastaIngresos"
+        />
+      </div>
+
+      <div class="col-12 text-center mt-4">
+        <button
+          type="button"
+          class="btn btnVerde me-2"
+          (click)="CargarIngresosMensuales()"
+        >
+          Aplicar
+        </button>
+        <button
+          type="button"
+          class="btn btnRojo me-2"
+          (click)="limpiarFiltrosIngresos()"
+        >
+          Reestablecer
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="!esEmpleado" class="report-container">
+    <canvas id="ingresosMensualesChart"></canvas>
+  </div>
+
+  <div *ngIf="!esEmpleado"  class="report-container">
+    <form class="row g-3">
+      <div class="col-md-6">
         <label for="fechaDesde" class="form-label">Fecha Desde</label>
         <input
           type="date"

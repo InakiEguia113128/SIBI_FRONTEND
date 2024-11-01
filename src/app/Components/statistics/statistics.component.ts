@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { Chart, registerables, ChartOptions, ChartData } from 'chart.js';
+import { Chart, registerables, ChartOptions, ChartData, TooltipItem } from 'chart.js';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ReporteService } from 'src/app/Services/Reportes/reporte.service';
 import Swal from 'sweetalert2';
@@ -18,6 +18,10 @@ import { LibrosService } from 'src/app/Services/Libros/libros.service';
 export class StatisticsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  fechaDesdeIngresos: string = ''; 
+  fechaHastaIngresos: string = ''; 
+  ingresosMensuales : any = [];
+  ingresosMensualesChart: Chart<'bar'> | undefined; 
   recalcularTotalLibro = false;
   mostrarFiltrosLibro = false;
   librosRelevantes : any = [];
@@ -74,9 +78,16 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     const fechaActual = new Date();
 
-    this.fechaDesde = new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1).toISOString().substring(0, 10);
+    const primerDiaMesPasado = new Date(fechaActual.getFullYear(), fechaActual.getMonth() - 1, 1);
+    this.fechaDesde = primerDiaMesPasado.toISOString().substring(0, 10);
   
     this.fechaHasta = new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0).toISOString().substring(0, 10);
+
+    this.fechaHastaIngresos = fechaActual.toISOString().substring(0, 10);
+
+    const fechaInicio = new Date(fechaActual);
+    fechaInicio.setMonth(fechaInicio.getMonth() - 5);
+    this.fechaDesdeIngresos = fechaInicio.toISOString().substring(0, 10);
 
     const tresMesesAtras = new Date(fechaActual.setMonth(fechaActual.getMonth() - 5));
 
@@ -99,12 +110,22 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
       this.obtenerAlquileresVencidos();
       this.CargarSociosActivos();
     }else{
+      this.CargarIngresosMensuales();
       this.CargarLibrosPorGenero();
       this.CargarLibrosRelevantes();
     }
   }
 
   CargarLibrosPorGenero() {
+
+    if (new Date(this.fechaDesde) > new Date(this.fechaHasta)) {
+      Swal.fire({
+        title: 'Error',
+        text: 'La fecha desde no puede ser mayor que la fecha hasta.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+    });
+    } else { 
     this.spinner.show();
   
     const payload = {
@@ -126,6 +147,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
         });
       },
     });
+  }
   }
 
   ngAfterViewInit() {
@@ -244,7 +266,8 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
   limpiarFiltros() {
     const fechaActual = new Date();
 
-    this.fechaDesde = new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1).toISOString().substring(0, 10);
+    const primerDiaMesPasado = new Date(fechaActual.getFullYear(), fechaActual.getMonth() - 1, 1);
+    this.fechaDesde = primerDiaMesPasado.toISOString().substring(0, 10);
   
     this.fechaHasta = new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0).toISOString().substring(0, 10);
     this.CargarLibrosPorGenero();  
@@ -259,7 +282,6 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
   }
 
   obtenerAlquileresVencidos(pagina: number = this.pageIndex, cantidad: number = this.pageSize, recalcularLength:boolean = this.recalcularToal) {
-
     this.spinner.show();
     
     const saltar = pagina * cantidad;
@@ -504,8 +526,15 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
   }
 
     CargarSociosActivos() {
-      this.spinner.show();
-    
+      if (new Date(this.fechaDesdeSociosActivos) > new Date(this.fechaHastaSociosActivos)) {
+        Swal.fire({
+          title: 'Error',
+          text: 'La fecha desde no puede ser mayor que la fecha hasta.',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar'
+      });
+      } else { 
+        this.spinner.show();
       const payload = {
         fechaDesde: this.fechaDesdeSociosActivos ? this.fechaDesdeSociosActivos : undefined,
         fechaHasta: this.fechaHastaSociosActivos ? this.fechaHastaSociosActivos : undefined
@@ -526,6 +555,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
           });
         },
       });
+    }
     } 
     
     generarColores2(cantidad: number): string[] {
@@ -722,5 +752,167 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
     }
 
       return filtrosTexto;
+  }
+  
+  CargarIngresosMensuales() {
+    if (new Date(this.fechaDesdeIngresos) > new Date(this.fechaHastaIngresos)) {
+      Swal.fire({
+        title: 'Error',
+        text: 'La fecha desde no puede ser mayor que la fecha hasta.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+    });
+    } else {
+    const payload = {
+        fechaDesde: this.fechaDesdeIngresos ? this.fechaDesdeIngresos : undefined,
+        fechaHasta: this.fechaHastaIngresos ? this.fechaHastaIngresos : undefined
+    };
+  
+    this.spinner.show();
+
+    this.servicioReportes.IngresosMensual(payload).subscribe({
+      next: (resp) => {
+        debugger
+        this.spinner.hide();
+        this.ingresosMensuales = resp.resultado;
+        this.dibujarGraficoIngresosPorMes();
+      },
+      error: (error) => {
+        this.spinner.hide();
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.error.error,
+        });
+      },
+    });
+    }
+  }
+
+  dibujarGraficoIngresosPorMes() {
+    const canvas = document.getElementById('ingresosMensualesChart') as HTMLCanvasElement;
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+            canvas.width = 400;
+            canvas.height = 400;
+
+            const dpr = window.devicePixelRatio || 1;
+            ctx.scale(dpr, dpr);
+
+            if (this.ingresosMensualesChart) {
+                this.ingresosMensualesChart.destroy();
+            }
+
+            const labels = this.ingresosMensuales.map((item: { mes: any; año: any; }) => `${item.mes} ${item.año}`);
+            const data = this.ingresosMensuales.map((item: { totalIngresos: any; }) => item.totalIngresos);
+
+            const backgroundColors = this.generarColores2(labels.length);
+
+            const chartData: ChartData<'bar', number[], unknown> = {
+                labels: labels,
+                
+                datasets: [
+                    {
+                        label: 'Total de Ingresos por Mes',
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 0,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8,
+                        borderRadius: 10,
+                    },
+                ],
+            };
+
+            const chartOptions: ChartOptions<'bar'> = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Total de Ingresos por Mes',
+                        font: {
+                            size: 20,
+                            weight: 'bold',
+                        },
+                    },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: (tooltipItem: TooltipItem<'bar'>) => {
+                                const label = tooltipItem.label || '';
+                                const value = tooltipItem.raw as number || 0; 
+                                return `${label}: $${value.toFixed(2)}`;
+                            },
+                        },
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        titleColor: 'rgba(0, 0, 0, 0.7)',
+                        bodyColor: 'rgba(0, 0, 0, 0.8)',
+                    },
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: 'rgba(0, 0, 0, 0.8)',
+                            font: {
+                                size: 14,
+                                weight: 'bold',
+                            },
+                        },
+                    },
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Meses',
+                            color: 'rgba(0, 0, 0, 0.8)',
+                            font: {
+                                size: 14,
+                                weight: 'bold',
+                            },
+                        },
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Ingresos ($)',
+                            color: 'rgba(0, 0, 0, 0.8)',
+                            font: {
+                                size: 14,
+                                weight: 'bold',
+                            },
+                        },
+                        ticks: {
+                            callback: (value) => `$${value}`,
+                        },
+                    },
+                },
+            };
+
+            this.ingresosMensualesChart = new Chart(ctx, {
+                type: 'bar',
+                data: chartData,
+                options: chartOptions,
+            });
+        } else {
+            console.error('No se pudo obtener el contexto 2D del canvas.');
+        }
+    } else {
+        console.error('No se pudo encontrar el elemento canvas con el id "ingresosMensualesChart".');
+    }
+  }
+
+  limpiarFiltrosIngresos(){
+    const fechaActual = new Date();
+
+    this.fechaHastaIngresos = fechaActual.toISOString().substring(0, 10);
+
+    const fechaInicio = new Date(fechaActual);
+    fechaInicio.setMonth(fechaInicio.getMonth() - 5);
+    this.fechaDesdeIngresos = fechaInicio.toISOString().substring(0, 10);
+
+    this.CargarIngresosMensuales();
   }
 }
