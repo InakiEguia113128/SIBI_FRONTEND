@@ -772,7 +772,6 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 
     this.servicioReportes.IngresosMensual(payload).subscribe({
       next: (resp) => {
-        debugger
         this.spinner.hide();
         this.ingresosMensuales = resp.resultado;
         this.dibujarGraficoIngresosPorMes();
