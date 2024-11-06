@@ -26,6 +26,7 @@ import { LibrosService } from './Services/Libros/libros.service';
 import { SociosService } from './Services/Socios/socios.service';
 import { RentsComponent } from './Components/rents/rents.component';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { QuestionsComponent } from './Components/questions/questions.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
     RegisterComponent,
     CatalogComponent,
     EditProductComponent,
-    RentsComponent
+    RentsComponent,
+    QuestionsComponent
   ],
   imports: [
     BrowserModule,

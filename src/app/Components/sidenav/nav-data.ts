@@ -70,6 +70,13 @@ export const navbarData = [
         roles: ["Empleado","Socio","Administrador","Socio registrado"]
     },
     {
+        routeLink: 'questions',
+        icon : 'fal fa-question-circle',
+        label: 'Preguntas frecuentes',
+        logout: false,
+        roles: ["Empleado","Socio","Administrador","Socio registrado"]
+    },
+    {
         routeLink: '',
         icon : 'fal fa-sign-out',
         label: 'Cerrar sesión',

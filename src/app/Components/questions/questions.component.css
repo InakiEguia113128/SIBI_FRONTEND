@@ -1,4 +1,10 @@
 
+.bg-light {
+    background-color: #f8f9fa; /* Color clarito */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
 
 /*Custom*/
 
@@ -11,7 +17,7 @@
 }
 
 .mtc-30 {
-    margin-top: 30px;
+    margin-top: 1px;
 }
 
 .bg-Azul {
@@ -44,8 +50,23 @@ label {
     color: #27423D;
 }
 
+.btnRojo {
+    border-color: #27423D;
+    background: #6d221d;
+    color: #FAF8F2;
+}
+
 .btnVerde {
     background: #27423D;
+    color: #FAF8F2;
+    border-color: #FAF8F2;
+    overflow: hidden;
+    transition: all 500ms ease;
+    z-index: 0;
+}
+
+.btnAmarillo {
+    background: #404227;
     color: #FAF8F2;
     border-color: #FAF8F2;
     overflow: hidden;
@@ -75,7 +96,7 @@ label {
     background-color: #fff;
     box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
     padding: 30px;
-    margin-top: 5rem;
+    margin-top: 2rem;
     margin-bottom: 5rem;
 }
 
@@ -114,7 +135,7 @@ h5 {
 }
 
 .pad {
-    margin-top: 150px;
+    margin-top: 10px;
 }
 
 body {
@@ -327,22 +348,74 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     border-width: 1px !important;
 }
 
-::ng-deep .sweetalert-terms-content h2 {
-    font-size: 1.2em; 
-    margin-top: 15px;
-    color: #333;
+button{
+    border: none;
+    background: none;
 }
 
-::ng-deep .sweetalert-terms-content p {
-    margin: 8px 0;
-}
-
-::ng-deep .swal2-popup {
-    width: 600px !important; /* Ajusta el tamaño de la ventana */
-    max-width: 600px !important;
+.card-img-top {
+    width: 100%;
+    height: auto;
   }
   
-  ::ng-deep .sweetalert-terms-content {
-    font-size: 0.7em; 
-    text-align: justify;
+  .pagination {
+    margin-top: 20px;
   }
+  
+  .modal {
+    position: fixed;
+    z-index: 1050;
+  }
+
+  .modal {
+    display: none;
+  }
+  .modal.show {
+    display: block;
+  }
+  
+  .card {
+    border-radius: 15px;
+  }
+  
+  .card-header {
+    background-color: #082913; /* Verde oscuro */
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+  
+  .card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .card-body {
+    padding: 20px;
+    background-color: #f8f9fa;
+  }
+  
+  .card-text {
+    font-size: 16px;
+    color: #495057;
+  }
+  
+  .btn-outline-info {
+    border-radius: 50px;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .icono {
+    margin-right: 5px;
+  }
+
+  .disabled {
+    color: #b0b0b0; /* Un tono gris claro */
+    pointer-events: none; /* Esto desactiva los eventos de click */
+    opacity: 0.6; /* Hacer que el ícono se vea ligeramente opaco */
+  }
+  
+  
