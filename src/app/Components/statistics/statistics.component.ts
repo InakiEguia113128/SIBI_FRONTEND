@@ -228,6 +228,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
                   ? `${labels[context.dataIndex]}: ${value}`
                   : value;
               },
+              display: false,
             },
           },
         };
@@ -508,6 +509,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
                               const labels = context.chart.data.labels;
                               return labels ? `${labels[context.dataIndex]}: ${Math.round(value)}` : value;
                           },
+                            display: false, 
                       },
                   },
               };

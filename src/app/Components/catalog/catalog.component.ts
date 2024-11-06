@@ -28,7 +28,7 @@ export class CatalogComponent implements OnInit {
   selectedFileName: string = '';
   filtros: any = {
     titulo: null,
-    autos: null,
+    autor: null,
     editorial: null,
     fechaPublicacionDesde: null,
     fechaPublicacionHasta: null,
