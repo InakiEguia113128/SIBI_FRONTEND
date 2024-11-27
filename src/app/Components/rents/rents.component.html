@@ -23,7 +23,7 @@
           <tr *ngFor="let alquiler of alquileres">
             <td>{{alquiler.socio.nombre}} {{alquiler.socio.apellido}}</td>
             <td>{{alquiler.socio?.nroDocumento || '-' }}</td>
-            <td>{{alquiler.montoTotal | currency:'$':'symbol':'1.2-2'}}</td>
+            <td class="text-end">{{alquiler.montoTotal | currency:'$':'symbol':'1.2-2'}}</td>
             <td>{{alquiler.descripcion}}</td>
             <td>{{alquiler.fechaDesde | date: 'dd/MM/yyyy'}}</td>
             <td>{{alquiler.fechaHasta | date: 'dd/MM/yyyy'}}</td>

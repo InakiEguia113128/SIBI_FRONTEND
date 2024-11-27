@@ -209,6 +209,10 @@ export class RentsComponent implements OnInit {
 
   volver(){
     this.modoVistaAlquiler = false;
+    this.pageSize = 10; 
+    this.pageIndex = 0; 
+    this.recalcularToal = true
+    this.obtenerAlquileres();
   }
 
   cambiarEstadoModal(idAlquilerSeleccionadoCambioEstado : any) {
@@ -223,8 +227,6 @@ export class RentsComponent implements OnInit {
   }
 
   aceptarCambioEstado() {
-    
-    debugger
 
     if (this.nuevoEstado === "") {
       Swal.fire({
